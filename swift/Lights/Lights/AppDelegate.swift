@@ -37,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         loadLight()
     }
     
-    @IBAction func loadFlare(sender: AnyObject) {
+    @IBAction func loadFlare(_ sender: AnyObject) {
         loadFlare()
     }
     
@@ -144,7 +144,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
     
-    @IBAction func chooseEnvironment(sender: NSPopUpButton) {
+    @IBAction func chooseEnvironment(_ sender: NSPopUpButton) {
         if let environment = environmentsPopup.selectedItem?.representedObject as? Environment {
             selectedEnvironment = environment
             defaults.setObject(selectedEnvironment!.id, forKey: "environmentId")
@@ -152,7 +152,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
     
-    @IBAction func chooseZone(sender: NSPopUpButton) {
+    @IBAction func chooseZone(_ sender: NSPopUpButton) {
         if let zone = zonesPopup.selectedItem?.representedObject as? Zone {
             selectedZone = zone
             defaults.setObject(selectedZone!.id, forKey: "zoneId")
@@ -160,7 +160,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
     
-    @IBAction func chooseThing(sender: NSPopUpButton) {
+    @IBAction func chooseThing(_ sender: NSPopUpButton) {
         if let thing = thingsPopup.selectedItem?.representedObject as? Thing {
             selectedThing = thing
             flareManager.subscribe(selectedThing!)
@@ -169,7 +169,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
     
-    @IBAction func loadLight(sender: AnyObject) {
+    @IBAction func loadLight(_ sender: AnyObject) {
         loadLight()
     }
     
@@ -207,26 +207,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
     
-    @IBAction func setPower(sender: AnyObject) {
+    @IBAction func setPower(_ sender: AnyObject) {
         lightManager.setPower(defaults.boolForKey("on")) {jsonArray in }
         sendOn()
     }
     
-    @IBAction func takeHue(sender: AnyObject) {
+    @IBAction func takeHue(_ sender: AnyObject) {
         takeColorComponents(sender)
         sendColor()
     }
     
-    @IBAction func takeSaturation(sender: AnyObject) {
+    @IBAction func takeSaturation(_ sender: AnyObject) {
         takeColorComponents(sender)
     }
     
-    @IBAction func takeBrightness(sender: AnyObject) {
+    @IBAction func takeBrightness(_ sender: AnyObject) {
         takeColorComponents(sender)
         sendBrightness()
     }
     
-    @IBAction func takeColorComponents(sender: AnyObject) {
+    @IBAction func takeColorComponents(_ sender: AnyObject) {
         let hue = defaults.integerForKey("hue")
         let saturation = defaults.integerForKey("saturation")
         let brightness = defaults.integerForKey("brightness")
@@ -242,7 +242,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
             alpha: 1.0)
     }
     
-    @IBAction func takeColor(sender: NSColorWell) {
+    @IBAction func takeColor(_ sender: NSColorWell) {
         setColor(sender.color)
     }
     

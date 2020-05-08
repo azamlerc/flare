@@ -12,3 +12,4 @@ xcshareddata
 Flare*.json
 local.properties
 node_modules
+server/data/db

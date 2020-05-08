@@ -12,8 +12,12 @@ import Foundation
 
 
 class DetailsController: WKInterfaceController, WCSessionDelegate {
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        
+    }
     
-    var session: WCSession?
+    var mySession: WCSession?
     
     @IBOutlet weak var thingImage: WKInterfaceImage!
     @IBOutlet weak var descriptionLabel: WKInterfaceLabel!
@@ -27,15 +31,15 @@ class DetailsController: WKInterfaceController, WCSessionDelegate {
     
     var thing: Thing!
     
-    override func awakeWithContext(context: AnyObject?) {
+    override func awake(withContext context: Any?) {
         actionButtons = [actionButton1, actionButton2, actionButton3, actionButton4, actionButton5]
         
-        super.awakeWithContext(context)
+        super.awake(withContext: context)
         
         if WCSession.isSupported() {
-            session = WCSession.defaultSession()
-            session!.delegate = self
-            session!.activateSession()
+            mySession = WCSession.default
+            mySession!.delegate = self
+            mySession!.activate()
         }
 
         if let someThing = context as? Thing {
@@ -50,7 +54,7 @@ class DetailsController: WKInterfaceController, WCSessionDelegate {
     
     func updateButtons() {
         if let actions = thing.data["options"] as? [String] {
-            for (index,button) in actionButtons.enumerate() {
+            for (index,button) in actionButtons.enumerated() {
                 if index < actions.count {
                     button.setTitle(actions[index].titlecaseString())
                     button.setHidden(false)
@@ -66,39 +70,38 @@ class DetailsController: WKInterfaceController, WCSessionDelegate {
     }
     
     @IBAction func performAction1() {
-        performAction(0)
+        performAction(index: 0)
     }
 
     @IBAction func performAction2() {
-        performAction(1)
+        performAction(index: 1)
     }
     
     @IBAction func performAction3() {
-        performAction(2)
+        performAction(index: 2)
     }
     
     @IBAction func performAction4() {
-        performAction(3)
+        performAction(index: 3)
     }
     
     @IBAction func performAction5() {
-        performAction(4)
+        performAction(index: 4)
     }
-    
     
     func performAction(index: Int) {
         if let actions = thing.data["options"] as? [String] {
             if index < actions.count {
                 let action = actions[index]
                 NSLog("Action: \(action)")
-                
-                session!.sendMessage(["data":["thing":thing.id, "key":"color", "value":action]],
-                    replyHandler: { (message: [String : AnyObject]) -> Void in
-                        NSLog("Action sent")
-                    },
-                    errorHandler: { (error: NSError) -> Void in
+                                
+                mySession!.sendMessage(["data":["thing":thing.id, "key":"color", "value":action]],
+                                       replyHandler: ({ (message: [String : AnyObject]) -> Void in
+                                        NSLog("Action sent")
+                                        } as! ([String : Any]) -> Void),
+                    errorHandler: ({ (error: NSError) -> Void in
                         NSLog("Couldn't get location: \(error)")
-                    }
+                        } as! (Error) -> Void)
                 )
             }
         }

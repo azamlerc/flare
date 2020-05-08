@@ -9,12 +9,12 @@
 import Foundation
 import CoreGraphics
 
-public typealias JSONDictionary = [String:AnyObject]
+public typealias JSONDictionary = [String:Any]
 public typealias JSONArray = [JSONDictionary]
 
 // compare JSONDictionary objects
 public func ==(lhs: JSONDictionary, rhs: JSONDictionary) -> Bool {
-    return NSDictionary(dictionary: lhs).isEqualToDictionary(rhs)
+    return NSDictionary(dictionary: lhs).isEqual(to: rhs)
 }
 
 // a point translated by the given size
@@ -82,13 +82,13 @@ public func randomInt(limit:Int) -> Int {
 
 // returns a random Int between min and max inclusive
 public func randomInt(min: Int, max: Int) -> Int {
-    return min + randomInt(max - min + 1)
+    return min + randomInt(limit: max - min + 1)
 }
 
 // a random size with each dimension between min and max
 public func randomSize(min: Int, max: Int) -> CGSize {
-    let width = randomInt(min, max: max)
-    let height = randomInt(min, max: max)
+    let width = randomInt(min: min, max: max)
+    let height = randomInt(min: min, max: max)
     return CGSize(width:width, height:height)
 }
 
@@ -96,13 +96,13 @@ public extension Array {
     
     // returns a random object from the array
     func randomObject() -> Element  {
-        return self[randomInt(self.count)]
+        return self[randomInt(limit: self.count)]
     }
 
     // removes an object from the array by value
     mutating func removeObject<U: Equatable>(object: U) {
         var index: Int?
-        for (idx, objectToCompare) in self.enumerate() {
+        for (idx, objectToCompare) in self.enumerated() {
             if let to = objectToCompare as? U {
                 if object == to {
                     index = idx
@@ -111,7 +111,7 @@ public extension Array {
         }
         
         if (index != nil) {
-            self.removeAtIndex(index!)
+            self.remove(at: index!)
         }
     }
 }
@@ -120,13 +120,13 @@ public extension Double {
     
     // returns the number rounded to the given precision
     // for example, 17.37.roundTo(0.5) returns 17.5
-    public func roundTo(precision: Double) -> Double {
-        return (self + precision / 2.0).roundDown(precision)
+    func roundTo(precision: Double) -> Double {
+        return (self + precision / 2.0).roundDown(precision: precision)
     }
     
     // returns the number rounded down to the given precision
     // for example, 17.37.roundTo(0.5) returns 17.0
-    public func roundDown(precision: Double) -> Double {
+    func roundDown(precision: Double) -> Double {
         return Double(Int(self / precision)) * precision
     }
 }
@@ -139,7 +139,7 @@ public extension CGRect {
             y: (self.minY + self.maxY) / 2.0)
     }
 
-    public func toJSON() -> JSONDictionary {
+    func toJSON() -> JSONDictionary {
         return ["origin": self.origin.toJSON(), "size": self.size.toJSON()]
     }
 }
@@ -147,13 +147,13 @@ public extension CGRect {
 public extension CGSize {
     
     // returns the diagonal length
-    public func length() -> Double {
+    func length() -> Double {
         let x2 = Double(self.width * self.width)
         let y2 = Double(self.height * self.height)
         return sqrt(x2 + y2)
     }
     
-    public func toJSON() -> JSONDictionary {
+    func toJSON() -> JSONDictionary {
         return ["width": self.width, "height": self.height]
     }
 }
@@ -161,11 +161,11 @@ public extension CGSize {
 public extension CGPoint {
     
     // rounds the point's x and y values to the given precision
-    public func roundTo(precision: Double) -> CGPoint {
-        return CGPoint(x: self.x.roundTo(precision), y: self.y.roundTo(precision))
+    func roundTo(precision: Double) -> CGPoint {
+        return CGPoint(x: self.x.roundTo(precision: precision), y: self.y.roundTo(precision: precision))
     }
     
-    public func toJSON() -> JSONDictionary {
+    func toJSON() -> JSONDictionary {
         return ["x": self.x, "y": self.y]
     }
 }
@@ -173,24 +173,24 @@ public extension CGPoint {
 public extension CGFloat {
     
     // adds the same rounding behavior to CGFloat
-    public func roundTo(precision: Double) -> Double {
-        return Double(self).roundTo(precision)
+    func roundTo(precision: Double) -> Double {
+        return Double(self).roundTo(precision: precision)
     }
 }
 
 public func radiansToDegrees(radians: Double) -> Double {
-    return radians * 180.0 / M_PI
+    return radians * 180.0 / Double.pi
 }
 
 public func degreesToRadians(degrees: Double) -> Double {
-    return degrees * M_PI / 180.0
+    return degrees * Double.pi / 180.0
 }
 
 public extension Int {
     
     // calls the closure a number of times
     // e.g. 5.times { // do stuff }
-    public func times(closure: () -> ()) {
+    func times(closure: () -> ()) {
         if self > 0 {
             for _ in 1...self {
                 closure()
@@ -200,69 +200,64 @@ public extension Int {
 }
 
 // calls the closure in the main queue
-public func queue(closure:()->()) {
-    dispatch_async(dispatch_get_main_queue(), closure)
+public func queue(closure:@escaping ()->()) {
+    DispatchQueue.main.async(execute: closure)
 }
 
 // calls the closure in the background
-public func background(closure:()->()) {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), closure)
+public func background(closure:@escaping ()->()) {
+    DispatchQueue.global(qos: .userInitiated).async(execute: closure)
 }
 
 // calls the closure after the delay
 // e.g. delay(5.0) { // do stuff }
-public func delay(duration:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(duration * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+public func delay(duration:Double, closure:@escaping ()->()) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: closure)
 }
 
 // calls the closure repeatedly over a period of time
 // duration controls the total length of time
 // steps controls the number of intermediate steps
 // the counter variable i will be passed to the closure
-public func delayLoop(duration:Double, steps:Int, closure:(i:Int)->()) {
+public func delayLoop(duration:Double, steps:Int, closure: @escaping (_ i:Int)->()) {
     for i in 1...steps {
-        delay(Double(i) * (duration / Double(steps))) {
-            closure(i: i)
+        delay(duration: Double(i) * (duration / Double(steps))) {
+            closure(i)
         }
     }
 }
 
 public extension String {
     
-    public func titlecaseString() -> String {
-        let words = self.componentsSeparatedByString(" ")
+    func titlecaseString() -> String {
+        let words = self.components(separatedBy: " ")
         var newWords = [String]()
         
         for word in words {
-            let firstLetter = (word as NSString).substringToIndex(1)
-            let restOfWord = (word as NSString).substringFromIndex(1)
-            newWords.append("\(firstLetter.uppercaseString)\(restOfWord.lowercaseString)")
+            let firstLetter = (word as NSString).substring(to: 1)
+            let restOfWord = (word as NSString).substring(from: 1)
+            newWords.append("\(firstLetter.uppercased())\(restOfWord.lowercased())")
         }
         
-        return (newWords as NSArray).componentsJoinedByString(" ")
+        return newWords.joined(separator: " ")
     }
 }
 
 public extension NSMutableString {
     
     // replaces all occurrences of one string with another
-    public func replace(target: String, with: String) {
-        self.replaceOccurrencesOfString(target, withString: with, options: [], range: NSRange(location: 0, length: self.length))
+    func replace(target: String, with: String) {
+        self.replaceOccurrences(of: target, with: with, options: [], range: NSRange(location: 0, length: self.length))
     }
 }
 
 public extension NSData {
 
     // converts NSData to an NSDictionary
-    public func toJSONDictionary() -> JSONDictionary? {
+    func toJSONDictionary() -> JSONDictionary? {
         let json: JSONDictionary?
         do {
-            json = try NSJSONSerialization.JSONObjectWithData(self, options: []) as? JSONDictionary
+            json = try JSONSerialization.jsonObject(with: self as Data, options: []) as? JSONDictionary
         } catch _ {
             json = nil
         }
@@ -273,19 +268,19 @@ public extension NSData {
 public extension Dictionary {
 
     // converts a JSONDictionary to NSData
-    public func toData() -> NSData? {
+    func toData() -> NSData? {
         let data: NSData?
         do {
-            data = try NSJSONSerialization.dataWithJSONObject(self as! AnyObject, options:[])
+            data = try JSONSerialization.data(withJSONObject: self, options:[]) as NSData
         } catch _ {
             data = nil
         }
         return data
     }
     
-    public func toJSONString() -> String? {
+    func toJSONString() -> String? {
         if let data = self.toData() {
-            return NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+            return NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue) as String?
         } else {
             return nil
         }
@@ -342,31 +337,31 @@ extension Dictionary {
     }
     
     func getString(key: String) -> String {
-        return getValue(key, type: String.self)
+        return getValue(key: key, type: String.self)
     }
     
     func getInt(key: String) -> Int {
-        return getValue(key, type: Int.self)
+        return getValue(key: key, type: Int.self)
     }
     
     func getDouble(key: String) -> Double {
-        return getValue(key, type: Double.self)
+        return getValue(key: key, type: Double.self)
     }
     
     func getArray(key: String) -> JSONArray {
-        return getValue(key, type: JSONArray.self)
+        return getValue(key: key, type: JSONArray.self)
     }
     
     func getStringArray(key: String) -> [String] {
-        return getValue(key, type: [String].self)
+        return getValue(key: key, type: [String].self)
     }
     
     func getDate(key: String) -> NSDate {
-        let dateString = getString(key)
-        let mongoFormatter = NSDateFormatter()
+        let dateString = getString(key: key)
+        let mongoFormatter = DateFormatter()
         mongoFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        if let date = mongoFormatter.dateFromString(dateString) {
-            return date
+        if let date = mongoFormatter.date(from: dateString) {
+            return date as NSDate
         } else {
             return NSDate()
         }

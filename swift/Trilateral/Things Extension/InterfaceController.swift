@@ -11,38 +11,42 @@ import WatchConnectivity
 import Foundation
 
 class InterfaceController: WKInterfaceController, WCSessionDelegate {
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        
+    }
 
     @IBOutlet weak var thingsTable: WKInterfaceTable!
 
     var things = [Thing]()
     var currentPosition = CGPoint(x: 0, y: 0)
-    let numberFormatter = NSNumberFormatter()
-    var defaults = NSUserDefaults.standardUserDefaults()
+    let numberFormatter = NumberFormatter()
+    var defaults = UserDefaults.standard
     var session: WCSession?
 
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: Any?) {
+        super.awake(withContext: context)
         
-        numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+        numberFormatter.numberStyle = NumberFormatter.Style.decimal
         numberFormatter.maximumFractionDigits = 0
         
         if WCSession.isSupported() {
-            session = WCSession.defaultSession()
+            session = WCSession.default
             session!.delegate = self
-            session!.activateSession()
+            session!.activate()
         }
         
         for i in 1...3 {
             var thingInfo = JSONDictionary()
-            thingInfo["name"] = "Thing \(i)"
-            thingInfo["description"] = "Stuff \(i)"
-            thingInfo["data"] = ["price":i * 10]
-            thingInfo["position"] = ["x":i, "y":0]
+            thingInfo["name"] = "Thing \(i)" as AnyObject
+            thingInfo["description"] = "Stuff \(i)" as AnyObject
+            thingInfo["data"] = ["price":i * 10] as AnyObject
+            thingInfo["position"] = ["x":i, "y":0] as AnyObject
             NSLog("Thing: \(thingInfo)")
             things.append(Thing(json: thingInfo))
         }
         
-        delay(1.0) {
+        delay(duration: 1.0) {
             NSLog("Getting things...")
             self.getThings()
             self.getPosition()
@@ -67,21 +71,21 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         }
         
         // set the distance to each flare object from the current position
-        for (_, flare) in things.enumerate() {
-            flare.setDistanceFrom(currentPosition)
+        for (_, flare) in things.enumerated() {
+            flare.setDistanceFrom(currentPosition: currentPosition)
         }
         
         // sort the flare objects by distance
-        things.sortInPlace { (one: Flare, two: Flare) -> Bool in
-            return one.distance < two.distance
+        things.sort { (one: Flare, two: Flare) -> Bool in
+            return Unicode.CanonicalCombiningClass(rawValue: Unicode.CanonicalCombiningClass.RawValue(one.distance!)) < Unicode.CanonicalCombiningClass(rawValue: Unicode.CanonicalCombiningClass.RawValue(two.distance!))
         }
         
         // update the name and distance of the table rows
-        for (index, flare) in things.enumerate() {
-            if let row = thingsTable.rowControllerAtIndex(index) as? TableRow {
+        for (index, flare) in things.enumerated() {
+            if let row = thingsTable.rowController(at: index) as? TableRow {
                 row.nameLabel.setText(flare.name)
                 row.commentsLabel.setText(flare.comment)
-                row.distanceLabel.setText(String(format:"%.1f", distanceString(flare)))
+                row.distanceLabel.setText(String(format:"%.1f", distanceString(flare: flare)))
                 if let price = flare.data["price"] as? Int {
                     row.priceLabel.setText("$\(price)")
                 }
@@ -98,8 +102,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         }
     }
     
-    override func contextForSegueWithIdentifier(segueIdentifier: String,
-        inTable table: WKInterfaceTable, rowIndex: Int) -> AnyObject? {
+    override func contextForSegue(withIdentifier segueIdentifier: String, in table: WKInterfaceTable, rowIndex: Int) -> Any? {
             if segueIdentifier == "ShowDetails" {
                 return things[rowIndex]
             }
@@ -109,16 +112,16 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 
     func getThings() {
         session!.sendMessage(["get":"things"],
-            replyHandler: { (message: [String : AnyObject]) -> Void in
-                self.gotThings(message)
-            },
-            errorHandler: { (error: NSError) -> Void in
+                             replyHandler: ({ (message: [String : AnyObject]) -> Void in
+                                self.gotThings(message: message)
+                                } as! ([String : Any]) -> Void),
+            errorHandler: ({ (error: NSError) -> Void in
                 NSLog("Couldn't get things: \(error)")
-        })
+                } as! (Error) -> Void))
     }
     
     func gotThings(message: JSONDictionary) {
-        self.things = Thing.loadJson(message)
+        self.things = Thing.loadJson(json: message)
         NSLog("Got \(self.things.count) things.")
         
         if (self.things.count > 0) {
@@ -131,20 +134,20 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     // sends a message to the iPhone to ask for the location
     // and then sets the location (if it receives a reply)
     func getPosition() {
-        let x = defaults.doubleForKey("x")
-        let y = defaults.doubleForKey("y")
+        let x = defaults.double(forKey: "x")
+        let y = defaults.double(forKey: "y")
         if (x != 0.0) && (y != 0.0) {
             currentPosition = CGPoint(x:x, y:y)
         }
         
         if (session != nil) {
             session!.sendMessage(["get":"position"],
-                replyHandler: { (message: [String : AnyObject]) -> Void in
-                    self.setPosition(message)
-                },
-                errorHandler: { (error: NSError) -> Void in
-                    NSLog("Couldn't get location: \(error)")
-            })
+                                 replyHandler: ({ (message: [String : AnyObject]) -> Void in
+                                    self.setPosition(position: message)
+                                    } as! ([String : Any]) -> Void),
+                                 errorHandler: ({ (error: NSError) -> Void in
+                                    NSLog("Couldn't get location: \(error)")
+                                    } as! (Error) -> Void))
         }
     }
     
@@ -152,34 +155,34 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     // sets the location and reloads the table
     func setPosition(position: JSONDictionary) {
         if let x = position["x"] as? Double,
-            y = position["y"] as? Double
+            let y = position["y"] as? Double
         {
-            defaults.setDouble(x, forKey: "x")
-            defaults.setDouble(y, forKey: "y")
+            defaults.set(x, forKey: "x")
+            defaults.set(y, forKey: "y")
             
             currentPosition = CGPoint(x:x, y:y)
             reloadTable()
         }
     }
     
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         NSLog("Got message: \(message)")
         
         if let position = message["position"] as? JSONDictionary {
-            setPosition(position)
+            setPosition(position: position)
         } else if let _ = message["things"] as? JSONArray {
-            gotThings(message)
+            gotThings(message: message)
         }
     }
     
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject],
-        replyHandler: ([String : AnyObject]) -> Void) {
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any],
+                 replyHandler replyhandler: @escaping ([String : Any]) -> Void) {
             NSLog("Got message (reply handler): \(message)")
             
             if let position = message["position"] as? JSONDictionary {
-                setPosition(position)
+                setPosition(position: position)
             } else if let _ = message["things"] as? JSONArray {
-                gotThings(message)
+                gotThings(message: message)
             }
     }
 

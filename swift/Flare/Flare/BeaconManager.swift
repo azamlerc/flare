@@ -43,11 +43,11 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
         
         if (environment != nil) {
             if let uuidString = environment!.uuid {
-                let uuid = NSUUID(UUIDString: uuidString)
-                region = CLBeaconRegion(proximityUUID: uuid!, identifier: environment!.name)
+                let uuid = NSUUID(uuidString: uuidString)
+                region = CLBeaconRegion(proximityUUID: uuid! as UUID, identifier: environment!.name)
                 beacons = environment!.beacons()
                 linearBeacons = [Thing](beacons.values)
-                linearBeacons.sortInPlace({ $0.minor > $1.minor })
+                linearBeacons.sort(by: { $0.minor ?? 0 > $1.minor ?? 0 })
                 if beaconDebug { NSLog("Looking for \(beacons.count) beacons.") }
             } else {
                 NSLog("Environment has no uuid.")
@@ -57,13 +57,13 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
     
     public func start() {
         if region != nil {
-            self.locationManager.startRangingBeaconsInRegion(region!)
+            self.locationManager.startRangingBeacons(in: region!)
         }
     }
 
     public func stop() {
         if region != nil {
-            self.locationManager.stopRangingBeaconsInRegion(region!)
+            self.locationManager.stopRangingBeacons(in: region!)
         }
     }
 
@@ -85,11 +85,11 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
     
     public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
-            case .NotDetermined: NSLog("Not determined")
-            case .Restricted: NSLog("Restricted")
-            case .Denied: NSLog("Denied")
-            case .AuthorizedAlways: NSLog("Authorized Always")
-            case .AuthorizedWhenInUse: NSLog("Authorized When In Use")
+        case .notDetermined: NSLog("Not determined")
+        case .restricted: NSLog("Restricted")
+        case .denied: NSLog("Denied")
+        case .authorizedAlways: NSLog("Authorized Always")
+        case .authorizedWhenInUse: NSLog("Authorized When In Use")
         }
     }
 
@@ -100,36 +100,36 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
             currentLatlong = location
             
             if delegate != nil {
-                delegate!.deviceLocationDidChange(location)
+                delegate!.deviceLocationDidChange(location: location)
             }
         }
     }
 
-    public func locationManager(manager: CLLocationManager, didRangeBeacons clbeacons: [CLBeacon], inRegion region: CLBeaconRegion) {
+    public func locationManager(_ manager: CLLocationManager, didRangeBeacons clbeacons: [CLBeacon], in region: CLBeaconRegion) {
         var clBeaconIndex = [Int:CLBeacon]()
         
         if beaconDebug { NSLog("Found \(clbeacons.count) beacons.") }
 
         for clbeacon in clbeacons {
-            let index = clbeacon.major.integerValue * 10000 + clbeacon.minor.integerValue
-            if beaconDebug { NSLog("Saw beacon: \(clbeacon.major.integerValue) - \(clbeacon.minor.integerValue)") }
+            let index = clbeacon.major.intValue * 10000 + clbeacon.minor.intValue
+            if beaconDebug { NSLog("Saw beacon: \(clbeacon.major.intValue) - \(clbeacon.minor.intValue)") }
             clBeaconIndex[index] = clbeacon
         }
         
         for (index, beacon) in beacons {
             if let clbeacon = clBeaconIndex[index] {
                 if beaconDebug { NSLog("Found beacon: \(beacon.name)") }
-                beacon.addDistance(clbeacon.accuracy)
+                beacon.addDistance(distance: clbeacon.accuracy)
             } else {
                 if beaconDebug { NSLog("Couldn't find beacon: \(beacon.name) (\(index))") }
-                beacon.addDistance(-1.0) // the beacon was not seen this time
+                beacon.addDistance(distance: -1.0) // the beacon was not seen this time
             }
         }
         
         if delegate != nil {
-            let position = weightedLocation(false)
+            let position = weightedLocation(average: false)
             if !position.x.isNaN && !position.y.isNaN {
-                delegate!.devicePositionDidChange(position.roundTo(0.01))
+                delegate!.devicePositionDidChange(position: position.roundTo(precision: 0.01))
             }
         }
     }
@@ -139,12 +139,12 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
     var lastAngle = -1.0
 
     public func locationManager(manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        let newAngle = newHeading.magneticHeading.roundTo(5.0)
+        let newAngle = newHeading.magneticHeading.roundTo(precision: 5.0)
         
         if newAngle != lastAngle && lastAngleTime.timeIntervalSinceNow < -angleDelay {
             lastAngleTime = NSDate()
             lastAngle = newAngle
-            delegate!.deviceAngleDidChange(newAngle)
+            delegate!.deviceAngleDidChange(angle: newAngle)
         }
     }
     
@@ -166,13 +166,13 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
         }
 
         var sortedBeacons = [Thing](beacons.values)
-        sortedBeacons.sortInPlace { $0.inverseDistance > $1.inverseDistance }
+        sortedBeacons.sort { $0.inverseDistance > $1.inverseDistance }
         
         // let trainDemo = true
         // var nearest: Thing?
         // var secondNearest: Thing?
         
-        for (_,beacon) in sortedBeacons.enumerate() {
+        for (_,beacon) in sortedBeacons.enumerated() {
             if beacon.inverseDistance != -1 {
 
                 // for tracking position on a linear circuit,

@@ -11,7 +11,7 @@ import Flare
 
 class NearbyThingController: UIViewController, FlareController {
     
-    var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var nearbyThingLabel: UILabel!
@@ -40,7 +40,7 @@ class NearbyThingController: UIViewController, FlareController {
     var colors = [String]()
     var defaultColors = ["red", "orange", "yellow", "green", "blue", "purple"]
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         appDelegate.flareController = self
         appDelegate.updateFlareController()
@@ -81,7 +81,7 @@ class NearbyThingController: UIViewController, FlareController {
             // colorLabel.text = color
             
             for (index, colorButton) in colorButtons {
-                colorButton.selected = index < colors.count && color == colors[index]
+                colorButton.isSelected = index < colors.count && color == colors[index]
             }
             
             if let imageName = nearbyThing?.imageName() {
@@ -91,7 +91,7 @@ class NearbyThingController: UIViewController, FlareController {
             // colorLabel.text = ""
             
             for (_, colorButton) in colorButtons {
-                colorButton.selected = false
+                colorButton.isSelected = false
             }
             
             imageView.image = nil
@@ -106,9 +106,9 @@ class NearbyThingController: UIViewController, FlareController {
         }
         
         if let on = nearbyThing?.data["on"] {
-            powerSwitch.on = on as! NSObject == 1
+            powerSwitch.isOn = on as! Bool
         } else {
-            powerSwitch.on = false
+            powerSwitch.isOn = false
         }
     }
     
@@ -116,25 +116,25 @@ class NearbyThingController: UIViewController, FlareController {
         
     }
     
-    @IBAction func performAction(sender: UIButton) {
-        let identifiers = sender.accessibilityIdentifier!.componentsSeparatedByString(" ")
+    @IBAction func performAction(_ sender: UIButton) {
+        let identifiers = sender.accessibilityIdentifier!.components(separatedBy: " ")
         let action = identifiers.first!
         
         if nearbyThing != nil {
-            appDelegate.flareManager.performAction(nearbyThing!, action: action, sender: device)
+            appDelegate.flareManager.performAction(flare: nearbyThing!, action: action, sender: device)
         }
     }
     
-    @IBAction func setColor(sender: ColorButton) {
-        appDelegate.setNearbyThingData("color", value: sender.colorName)
+    @IBAction func setColor(_ sender: ColorButton) {
+        appDelegate.setNearbyThingData(key: "color", value: sender.colorName as AnyObject)
     }
 
-    @IBAction func setBrightness(sender: UISlider) {
-        let brightness = Double(slider.value).roundTo(0.1)
-        appDelegate.setNearbyThingData("brightness", value: brightness)
+    @IBAction func setBrightness(_ sender: UISlider) {
+        let brightness = Double(slider.value).roundTo(precision: 0.1)
+        appDelegate.setNearbyThingData(key: "brightness", value: brightness as AnyObject)
     }
     
-    @IBAction func setOn(sender: UISwitch) {
-        appDelegate.setNearbyThingData("on", value: sender.on)
+    @IBAction func setOn(_ sender: UISwitch) {
+        appDelegate.setNearbyThingData(key: "on", value: sender.isOn as AnyObject)
     }
 }

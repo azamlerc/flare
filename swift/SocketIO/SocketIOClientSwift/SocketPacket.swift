@@ -95,7 +95,7 @@ struct SocketPacket {
         }
     }
     
-    private func completeMessage(var message: String, ack: Bool) -> String {
+    private func completeMessage( message: String, ack: Bool) -> String {
         if data.count == 0 {
             return message + "]"
         }
@@ -265,16 +265,16 @@ extension SocketPacket {
 }
 
 private extension SocketPacket {
-    static func shred(data: AnyObject, inout binary: [NSData]) -> AnyObject {
+    static func shred(data: AnyObject, binary: inout [NSData]) -> AnyObject {
         if let bin = data as? NSData {
-            let placeholder = ["_placeholder" :true, "num": binary.count]
+            let placeholder = ["_placeholder" :true, "num": binary.count] as [String : Any]
             
             binary.append(bin)
             
             return placeholder
         } else if var arr = data as? [AnyObject] {
             for i in 0..<arr.count {
-                arr[i] = shred(arr[i], binary: &binary)
+                arr[i] = shred(data: arr[i], binary: &binary)
             }
             
             return arr
@@ -282,7 +282,7 @@ private extension SocketPacket {
             let mutDict = NSMutableDictionary(dictionary: dict)
             
             for (key, value) in dict {
-                mutDict[key as! NSCopying] = shred(value, binary: &binary)
+                mutDict[key as! NSCopying] = shred(data: value as AnyObject, binary: &binary)
             }
             
             return mutDict
@@ -291,14 +291,14 @@ private extension SocketPacket {
         }
     }
     
-    static func deconstructData(var data: [AnyObject]) -> ([AnyObject], [NSData]) {
+    static func deconstructData( data: [AnyObject]) -> ([AnyObject], [NSData]) {
         var binary = [NSData]()
         
         for i in 0..<data.count {
             if data[i] is NSArray || data[i] is NSDictionary {
-                data[i] = shred(data[i], binary: &binary)
+                self.data[i] = shred(data: data[i], binary: &binary)
             } else if let bin = data[i] as? NSData {
-                data[i] = ["_placeholder" :true, "num": binary.count]
+                self.data[i] = ["_placeholder" :true, "num": binary.count]
                 binary.append(bin)
             }
         }

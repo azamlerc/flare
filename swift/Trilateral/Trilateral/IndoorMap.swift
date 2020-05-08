@@ -12,14 +12,14 @@ import CoreGraphics
 
 class IndoorMap: UIView, FlareController {
     
-    var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     var currentEnvironment: Environment? {
         didSet(value) {
             if value != currentEnvironment {
                 for (_,label) in labels {
                     label.removeFromSuperview()
                 }
-                labels.removeAll(keepCapacity: true)
+                labels.removeAll(keepingCapacity: true)
                 
                 if currentEnvironment != nil {
                     updateFlipped()
@@ -55,10 +55,10 @@ class IndoorMap: UIView, FlareController {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:#selector(IndoorMap.orientationDidChange(_:)), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector:#selector(IndoorMap.orientationDidChange(note:)), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
     }
     
-    func orientationDidChange(note: NSNotification) {
+    @objc func orientationDidChange(note: NSNotification) {
         dataChanged()
     }
 
@@ -72,19 +72,19 @@ class IndoorMap: UIView, FlareController {
     
     // sender.identifier can contain several words
     // the first word is the action
-    @IBAction func performAction(sender: UIButton) {
-        let identifiers = sender.accessibilityIdentifier!.componentsSeparatedByString(" ")
+    @IBAction func performAction(_ sender: UIButton) {
+        let identifiers = sender.accessibilityIdentifier!.components(separatedBy: " ")
         let action = identifiers.first!
         
-        if device != nil { appDelegate.flareManager.performAction(device!, action: action, sender: nil) }
+        if device != nil { appDelegate.flareManager.performAction(flare: device!, action: action, sender: nil) }
     }
 
     func labelForFlare(flare: Flare) -> UILabel {
         var label = labels[flare.id]
         if (label == nil) {
-            label = UILabel(frame: CGRectMake(0, 0, 200, 21))
-            label!.textAlignment = NSTextAlignment.Center
-            label!.textColor = UIColor.grayColor()
+            label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 21))
+            label!.textAlignment = NSTextAlignment.center
+            label!.textColor = UIColor.gray
             label!.text = flare.name
             self.addSubview(label!)
             labels[flare.id] = label!
@@ -95,7 +95,7 @@ class IndoorMap: UIView, FlareController {
     func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         NSLog("Will rotate")
 
-        coordinator.animateAlongsideTransition(nil, completion: { context in
+        coordinator.animate(alongsideTransition: nil, completion: { context in
             NSLog("Completion")
             
             self.dataChanged()
@@ -103,7 +103,7 @@ class IndoorMap: UIView, FlareController {
     }
             
     func updateScale() {
-        let inset = CGRectInset(self.frame, 40, 40)
+        let inset = self.frame.insetBy(dx: 40, dy: 40)
         let grid = currentEnvironment!.perimeter
         let xScale = inset.size.width / grid.size.width
         let yScale = inset.size.height / grid.size.height
@@ -121,62 +121,62 @@ class IndoorMap: UIView, FlareController {
         NSLog("Flipped: \(self.flipped ? "yes" : "no")")
     }
 
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         if (currentEnvironment != nil) {
             let context = UIGraphicsGetCurrentContext()
-            CGContextScaleCTM(context, 1, -1);
-            CGContextTranslateCTM(context, 0, -self.bounds.size.height);
+            context!.scaleBy(x: 1, y: -1);
+            context!.translateBy(x: 0, y: -self.bounds.size.height);
             
-            let inset = CGRectInset(self.frame, 40, 40)
+            let inset = self.frame.insetBy(dx: 40, dy: 40)
             let grid = currentEnvironment!.perimeter.toRect()
             
             updateScale()
             insetCenter = inset.center()
             gridCenter = grid.center()
             
-            fillRect(grid, color: lightGray, inset: 0)
+            fillRect(rect: grid, color: lightGray, inset: 0)
             
             for zone in zones {
-                fillRect(zone.perimeter.toRect(), color: lightGray, inset: 2)
+                fillRect(rect: zone.perimeter.toRect(), color: lightGray, inset: 2)
 
-                let label = labelForFlare(zone)
-                label.center = flipPoint(convertPoint(zone.perimeter.toRect().center()))
+                let label = labelForFlare(flare: zone)
+                label.center = flipPoint(point: convertPoint(gridPoint: zone.perimeter.toRect().center()))
             }
 
             if device != nil && nearbyThing != nil {
                 let line = UIBezierPath()
-                line.moveToPoint(convertPoint(device!.position.toPoint()))
-                line.addLineToPoint(convertPoint(nearbyThing!.position.toPoint()))
+                line.move(to: convertPoint(gridPoint: device!.position.toPoint()))
+                line.addLine(to: convertPoint(gridPoint: nearbyThing!.position.toPoint()))
                 line.lineWidth = 3
                 selectedColor.setStroke()
                 line.stroke()
             }
 
             for thing in things {
-                let color = IndoorMap.colorForThing(thing)
+                let color = IndoorMap.colorForThing(thing: thing)
                 
-                if thing == nearbyThing { fillCircle(thing.position.toPoint(), radius: 15, color: selectedColor) }
-                fillCircle(thing.position.toPoint(), radius: 10, color: color)
+                if thing == nearbyThing { fillCircle(center: thing.position.toPoint(), radius: 15, color: selectedColor) }
+                fillCircle(center: thing.position.toPoint(), radius: 10, color: color)
                 
-                let label = labelForFlare(thing)
-                label.center = flipPoint(convertPoint(thing.position.toPoint()) + CGSize(width: 2, height: -22))
+                let label = labelForFlare(flare: thing)
+                label.center = flipPoint(point: convertPoint(gridPoint: thing.position.toPoint()) + CGSize(width: 2, height: -22))
             }
             
             if device != nil && !device!.position.x.isNaN && !device!.position.y.isNaN {
-                if nearbyThing != nil { fillCircle(device!.position.toPoint(), radius: 15, color: selectedColor) }
-                fillCircle(device!.position.toPoint(), radius: 10, color: blue)
+                if nearbyThing != nil { fillCircle(center: device!.position.toPoint(), radius: 15, color: selectedColor) }
+                fillCircle(center: device!.position.toPoint(), radius: 10, color: blue)
                 
-                let label = labelForFlare(device!)
-                label.center = flipPoint(convertPoint(device!.position.toPoint()) + CGSize(width: 2, height: -22))
+                let label = labelForFlare(flare: device!)
+                label.center = flipPoint(point: convertPoint(gridPoint: device!.position.toPoint()) + CGSize(width: 2, height: -22))
             }
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
-            let viewPoint = touch.locationInView(self)
-            let gridPoint = undoConvertPoint(flipPoint(viewPoint))
-            if let thing = thingNearPoint(gridPoint) {
+            let viewPoint = touch.location(in: self)
+            let gridPoint = undoConvertPoint(viewPoint: flipPoint(point: viewPoint))
+            if let thing = thingNearPoint(point: gridPoint) {
                 appDelegate.nearbyThing = thing
             }
         }
@@ -203,18 +203,18 @@ class IndoorMap: UIView, FlareController {
             brightness = value
         }
         
-        return getColor(colorName, brightness: brightness)
+        return getColor(name: colorName, brightness: brightness)
     }
 
     static func getColor(name: String, brightness: Double) -> UIColor {
-        if name == "clear" { return UIColor.clearColor() }
+        if name == "clear" { return UIColor.clear }
         if name == "white" { return UIColor(hue: 0, saturation: 0, brightness: 0.95, alpha: 1.0) }
         
         if let hex = LightManager.htmlColorNames[name] {
-            return colorWithHex(hex)
+            return colorWithHex(rgbValue: hex)
         }
         
-        return UIColor.redColor()
+        return UIColor.red
     }
     
     static func colorWithHex(rgbValue: Int) -> UIColor {
@@ -235,15 +235,15 @@ class IndoorMap: UIView, FlareController {
     }
     
     func fillRect(rect: CGRect, color: UIColor, inset: CGFloat) {
-        let path = UIBezierPath(rect: CGRectInset(convertRect(rect), inset, inset))
+        let path = UIBezierPath(rect: convertRect(gridRect: rect).insetBy(dx: inset, dy: inset))
         color.setFill()
         path.fill()
     }
     
     func fillCircle(center: CGPoint, radius: CGFloat, color: UIColor) {
-        let newCenter = convertPoint(center)
+        let newCenter = convertPoint(gridPoint: center)
         let rect = CGRect(x: newCenter.x - radius, y: newCenter.y - radius, width: radius * 2, height: radius * 2)
-        let path = UIBezierPath(ovalInRect: rect)
+        let path = UIBezierPath(ovalIn: rect)
         color.setFill()
         path.fill()
     }
@@ -263,7 +263,7 @@ class IndoorMap: UIView, FlareController {
     }
     
     func convertRect(gridRect: CGRect) -> CGRect {
-        return CGRect(origin: convertPoint(gridRect.origin), size: convertSize(gridRect.size))
+        return CGRect(origin: convertPoint(gridPoint: gridRect.origin), size: convertSize(gridSize: gridRect.size))
     }
     
     func undoConvertPoint(viewPoint: CGPoint) -> CGPoint {

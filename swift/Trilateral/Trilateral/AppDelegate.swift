@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     let animationDelay = 0.5 // the duration of the animation in seconds
     let animationSteps = 30 // the number of times during the animation that the display is updated
     
-    var defaults = NSUserDefaults.standardUserDefaults()
+    var defaults = UserDefaults.standard
     var flareManager = FlareManager(host: "localhost", port: 1234)
     var beaconManager = BeaconManager()
     var currentLocation: CLLocation?
@@ -57,28 +57,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     // var session: WCSession?
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
         registerDefaultsFromSettingsBundle()
 
-        if let newHost = defaults.stringForKey("host") { host = newHost }
-        let newPort = defaults.integerForKey("port")
+        if let newHost = defaults.string(forKey: "host") { host = newHost }
+        let newPort = defaults.integer(forKey: "port")
         if newPort != 0 { port = newPort }
         
         NSLog("Server: \(host):\(port)")
-        NSLog("GPS: \(defaults.boolForKey("useGPS") ? "on" : "off")")
-        NSLog("Beacons: \(defaults.boolForKey("useBeacons") ? "on" : "off")")
-        NSLog("CMX: \(defaults.boolForKey("useCMX") ? "on" : "off")")
-        NSLog("Compass: \(defaults.boolForKey("useCompass") ? "on" : "off")")
+        NSLog("GPS: \(defaults.bool(forKey: "useGPS") ? "on" : "off")")
+        NSLog("Beacons: \(defaults.bool(forKey: "useBeacons") ? "on" : "off")")
+        NSLog("CMX: \(defaults.bool(forKey: "useCMX") ? "on" : "off")")
+        NSLog("Compass: \(defaults.bool(forKey: "useCompass") ? "on" : "off")")
+        
+        print("host: \(host)")
+        print("port: \(port)")
         
         flareManager = FlareManager(host: host, port: port)
         flareManager.debugSocket = false // turn on to print all Socket.IO messages
+        flareManager.debugHttp = true
         
         flareManager.delegate = self
         beaconManager.delegate = self
         
         flareManager.connect()
         
-        if !defaults.boolForKey("useGPS") { loadDefaultEnvironment() }
+        if !defaults.bool(forKey: "useGPS") { loadDefaultEnvironment() }
 
 /*        if WCSession.isSupported() {
             session = WCSession.defaultSession()
@@ -86,6 +90,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             session!.activateSession()
         }
  */
+        
+        loadEnvironments()
+        
         return true
     }
 
@@ -102,22 +109,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func loadEnvironments() {
+        print("loadEnvironments")
+        
         var params: JSONDictionary? = nil
         if currentLocation != nil {
             params = ["latitude":currentLocation!.coordinate.latitude, "longitude":currentLocation!.coordinate.longitude]
         }
         
-        self.flareManager.loadEnvironments(params, loadDevices: false) { (environments) -> () in // load environment for current location
+        self.flareManager.loadEnvironments(params: params, loadDevices: false) { (environments) -> () in // load environment for current location
             if environments.count > 0 {
                 self.allEnvironments = environments
-                self.loadEnvironment(environments[0])
+                self.loadEnvironment(environment: environments[0])
             } else {
-                self.flareManager.loadEnvironments(nil, loadDevices: false) { (environments) -> () in // load all environments
+                self.flareManager.loadEnvironments(params: nil, loadDevices: false) { (environments) -> () in // load all environments
                     if environments.count > 0 {
                         self.allEnvironments = environments
                         NSLog("No environments found nearby, using default environment.")
                         self.allEnvironments = environments
-                        self.loadEnvironment(environments[0])
+                        self.loadEnvironment(environment: environments[0])
                     } else {
                         NSLog("No environments found.")
                     }
@@ -127,17 +136,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func loadDefaultEnvironment() {
-        self.flareManager.loadEnvironments(nil, loadDevices: false) { (environments) -> () in // load all environments
+        self.flareManager.loadEnvironments(params: nil, loadDevices: false) { (environments) -> () in // load all environments
             if environments.count > 0 {
                 self.allEnvironments = environments
-                if let environmentId = self.defaults.stringForKey("environmentId"),
-                    environment = self.environmentWithId(environments, environmentId: environmentId)
+                if let environmentId = self.defaults.string(forKey: "environmentId"),
+                    let environment = self.environmentWithId(environments: environments, environmentId: environmentId)
                 {
                     NSLog("Using saved environment.")
-                    self.loadEnvironment(environment)
+                    self.loadEnvironment(environment: environment)
                 } else {
                     NSLog("Using first environment.")
-                    self.loadEnvironment(environments[0])
+                    self.loadEnvironment(environment: environments[0])
                 }
             } else {
                 NSLog("No environments found.")
@@ -156,19 +165,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func loadEnvironment(environment: Environment) {
         self.currentEnvironment = environment
-        self.flareManager.subscribe(environment, all: true)
+        self.flareManager.subscribe(flare: environment, all: true)
         NSLog("Current environment: \(environment.name)")
         
-        defaults.setObject(environment.id, forKey: "environmentId")
+        defaults.set(environment.id, forKey: "environmentId")
         
-        self.flareManager.getCurrentDevice(environment.id, template: self.deviceTemplate()) { (device) -> () in
-            self.loadDevice(device)
+        self.flareManager.getCurrentDevice(environmentId: environment.id, template: self.deviceTemplate()) { (device) -> () in
+            self.loadDevice(value: device)
         }
         
-        self.beaconManager.loadEnvironment(environment)
-        if defaults.boolForKey("useBeacons") { self.beaconManager.start() }
-        if defaults.boolForKey("useGPS") { self.beaconManager.startMonitoringLocation() }
-        if defaults.boolForKey("useCompass") { self.beaconManager.startUpdatingHeading() }
+        self.beaconManager.loadEnvironment(value: environment)
+        if defaults.bool(forKey: "useBeacons") { self.beaconManager.start() }
+        if defaults.bool(forKey: "useGPS") { self.beaconManager.startMonitoringLocation() }
+        if defaults.bool(forKey: "useCompass") { self.beaconManager.startUpdatingHeading() }
         
         self.updateFlareController()
 
@@ -176,19 +185,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func nextEnvironment() {
         if allEnvironments.count > 0 && currentEnvironment != nil {
-            let index = allEnvironments.indexOf(currentEnvironment!)
+            let index = allEnvironments.index(of: currentEnvironment!)
             let next = (index! + 1) % allEnvironments.count
             let nextEnvironment = allEnvironments[next]
-            loadEnvironment(nextEnvironment)
+            loadEnvironment(environment: nextEnvironment)
         }
     }
     
     func previousEnvironment() {
         if allEnvironments.count > 0 && currentEnvironment != nil {
-            let index = allEnvironments.indexOf(currentEnvironment!)
+            let index = allEnvironments.index(of: currentEnvironment!)
             let previous = (index! - 1 + allEnvironments.count) % allEnvironments.count
             let previousEnvironment = allEnvironments[previous]
-            loadEnvironment(previousEnvironment)
+            loadEnvironment(environment: previousEnvironment)
         }
     }
     
@@ -206,7 +215,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func loadCurrentZone() {
         if currentEnvironment != nil && device != nil {
-            flareManager.getCurrentZone(currentEnvironment!, device: device!) { zone in
+            flareManager.getCurrentZone(environment: currentEnvironment!, device: device!) { zone in
                 self.currentZone = zone
             }
         }
@@ -214,7 +223,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func loadNearbyThing() {
         if currentEnvironment != nil && device != nil {
-            flareManager.getNearestThing(currentEnvironment!, device: device!) { thing in
+            flareManager.getNearestThing(environment: currentEnvironment!, device: device!) { thing in
                 self.nearbyThing = thing
             }
         }
@@ -233,9 +242,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func getMacAddress() {
-        flareManager.getMacAddress(host, port: 80) { mac in
+        flareManager.getMacAddress(host: host, port: 80) { mac in
             NSLog("mac: \(mac)")
-            self.flareManager.setData(self.device!, key: "mac", value: mac, sender: self.device!)
+            self.flareManager.setData(flare: self.device!, key: "mac", value: mac as AnyObject, sender: self.device!)
         }
     }
     
@@ -266,56 +275,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     // data: {}
     // postion: {"x":0, "y":0}
     func deviceTemplate() -> JSONDictionary {
-        let uidevice = UIDevice.currentDevice()
+        let uidevice = UIDevice.current
         let name = uidevice.name
         let description = "\(uidevice.model), iOS \(uidevice.systemVersion)"
         return ["name":name, "description":description, "data":JSONDictionary(), "position":["x":0, "y":0]]
     }
     
-    func applicationWillResignActive(application: UIApplication) {
-        if defaults.boolForKey("useBeacons") { beaconManager.stop() }
-        if defaults.boolForKey("useGPS") { beaconManager.stopMonitoringLocation() }
-        if defaults.boolForKey("useCompass") { beaconManager.stopUpdatingHeading() }
+    func applicationWillResignActive(_ application: UIApplication) {
+        if defaults.bool(forKey: "useBeacons") { beaconManager.stop() }
+        if defaults.bool(forKey: "useGPS") { beaconManager.stopMonitoringLocation() }
+        if defaults.bool(forKey: "useCompass") { beaconManager.stopUpdatingHeading() }
         
         // not necessary to unsubscribe as disconnecting will take care of that
         flareManager.disconnect()
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
 
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
     
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        print("applicationDidBecomeActive")
+
         flareManager.connect()
         
         if currentLocation != nil {
             loadEnvironments() // reload the data and resubscribe
         }
         
-        if defaults.boolForKey("useBeacons") { beaconManager.start() }
-        if defaults.boolForKey("useGPS") { beaconManager.startMonitoringLocation() }
-        if defaults.boolForKey("useCompass") { beaconManager.startUpdatingHeading() }
+        if defaults.bool(forKey: "useBeacons") { beaconManager.start() }
+        if defaults.bool(forKey: "useGPS") { beaconManager.startMonitoringLocation() }
+        if defaults.bool(forKey: "useCompass") { beaconManager.startUpdatingHeading() }
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
     func devicePositionDidChange(position: Point3D) {
         if device != nil {
-            animateFlare(device!, oldPosition: device!.position, newPosition: position)
-            flareManager.setPosition(device!, position: position, sender: nil)
+            animateFlare(flare: device!, oldPosition: device!.position, newPosition: position)
+            flareManager.setPosition(flare: device!, position: position, sender: nil)
             // sendMessage(["position": position.toJSON()])
             
             if nearbyThing != nil {
-                let distance = device!.distanceTo(nearbyThing!)
+                let distance = device!.distanceTo(thing: nearbyThing!)
                 let brightness = 1.0 - (distance)
                 if brightness > 0 {
-                    setDoubleValue(brightness, key: "brightness", precision: 0.1, flare: nearbyThing!)
+                    setDoubleValue(value: brightness, key: "brightness", precision: 0.1, flare: nearbyThing!)
                 }
             }
         }
@@ -323,7 +334,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     // sets the double value for the given flare, rounded to the given precision, only if it has changed
     func setDoubleValue(value: Double, key: String, precision: Double, flare: Flare) {
-        let roundedValue = value.roundTo(precision)
+        let roundedValue = value.roundTo(precision: precision)
         var shouldChange = false
         
         if let oldValue = flare.data[key] as? Double {
@@ -334,7 +345,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 
         if shouldChange {
             flare.data[key] = roundedValue
-            flareManager.setData(flare, key: key, value: roundedValue, sender: device!)
+            flareManager.setData(flare: flare, key: key, value: roundedValue as AnyObject, sender: device!)
             dataChanged()
         }
     }
@@ -343,8 +354,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if device != nil {
             if angle != device!.angle() {
                 // NSLog("Angle: \(angle)")
-                animateAngle(device!, oldAngle: device!.angle(), newAngle: angle)
-                flareManager.setData(device!, key: "angle", value: angle, sender: device!)
+                animateAngle(flare: device!, oldAngle: device!.angle(), newAngle: angle)
+                flareManager.setData(flare: device!, key: "angle", value: angle as AnyObject, sender: device!)
                 dataChanged()
             }
         }
@@ -355,9 +366,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func didReceivePosition(flare: Flare, oldPosition: Point3D, newPosition: Point3D, sender: Flare?) {
-        if defaults.boolForKey("useCMX") {
+        if defaults.bool(forKey: "useCMX") || true {
             NSLog("\(flare.name) position: \(newPosition)")
-            animateFlare(flare as! FlarePosition, oldPosition: oldPosition, newPosition: newPosition)
+            animateFlare(flare: flare as! FlarePosition, oldPosition: oldPosition, newPosition: newPosition)
         }
     }
     
@@ -367,7 +378,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         NSLog("\(zone.name) enter: \(device.name)")
         self.currentZone = zone
         didEnter = true
-        delay(0.5) { self.didEnter = false }
+        delay(duration: 0.5) { self.didEnter = false }
     }
     
     func exit(zone: Zone, device: Device) {
@@ -387,8 +398,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
             // already subscribing to all objects
             // flareManager.subscribe(thing)
-            flareManager.getData(thing)
-            flareManager.getPosition(thing)
+            flareManager.getData(flare: thing)
+            flareManager.getPosition(flare: thing)
             
         }
     }
@@ -419,7 +430,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         let dz = (newPosition.z - oldPosition.z) / CGFloat(animationSteps)
         
         animatedFlare.position = oldPosition
-        delayLoop(animationDelay, steps: animationSteps) { i in
+        delayLoop(duration: animationDelay, steps: animationSteps) { i in
             animatedFlare.position = Point3D(x: oldPosition.x + CGFloat(i) * dx,
                                      y: oldPosition.y + CGFloat(i) * dy,
                                      z: oldPosition.z + CGFloat(i) * dz)
@@ -442,7 +453,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         let delta = (newAngle - oldAngleAdjusted) / Double(animationSteps)
         
         flare.data["angle"] = oldAngle
-        delayLoop(animationDelay, steps: animationSteps) { i in
+        delayLoop(duration: animationDelay, steps: animationSteps) { i in
             flare.data["angle"] = oldAngleAdjusted + Double(i) * delta
             self.animate()
             if i == self.animationSteps - 1 { self.dataChanged() }
@@ -452,7 +463,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func setNearbyThingData(key: String, value: AnyObject) {
         if nearbyThing != nil {
             nearbyThing!.data[key] = value
-            flareManager.setData(nearbyThing!, key: key, value: value, sender: device)
+            flareManager.setData(flare: nearbyThing!, key: key, value: value, sender: device)
             dataChanged()
         }
     }
@@ -460,28 +471,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func registerDefaultsFromSettingsBundle() {
         defaults.synchronize()
         
-        let settingsBundle: NSString = NSBundle.mainBundle().pathForResource("Settings", ofType: "bundle")!
-        if(settingsBundle.containsString("")){
+        let settingsBundle: NSString = Bundle.main.path(forResource: "Settings", ofType: "bundle")! as NSString
+        if(settingsBundle.contains("")){
             NSLog("Could not find Settings.bundle");
             return;
         }
-        let settings: NSDictionary = NSDictionary(contentsOfFile: settingsBundle.stringByAppendingPathComponent("Root.plist"))!
-        let preferences: NSArray = settings.objectForKey("PreferenceSpecifiers") as! NSArray
+        let settings: NSDictionary = NSDictionary(contentsOfFile: settingsBundle.appendingPathComponent("Root.plist"))!
         var defaultsToRegister = [String:AnyObject]()
-        
-        for prefSpecification in preferences {
-            if (prefSpecification.objectForKey("Key") != nil) {
-                let key: String = prefSpecification.objectForKey("Key") as! String
-                if !key.containsString("") {
-                    let currentObject: AnyObject? = defaults.objectForKey(key as String)
-                    if currentObject == nil {
-                        let objectToSet: AnyObject? = prefSpecification.objectForKey("DefaultValue")
-                        defaultsToRegister[key] = objectToSet!
-                    }
-                }
+        let prefSpecifierArray = settings.object(forKey: "PreferenceSpecifiers") as! NSArray
+
+        for prefItem in prefSpecifierArray {
+            if let key = (prefItem as AnyObject).object(forKey: "Key") as? String {
+                let defaultValue:AnyObject? = (prefItem as AnyObject).object(forKey: "DefaultValue") as AnyObject?
+                defaultsToRegister[key] = defaultValue
             }
         }
-        defaults.registerDefaults(defaultsToRegister)
+
+        defaults.register(defaults: defaultsToRegister)
         defaults.synchronize()
     }
 /*
@@ -492,7 +498,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
     }
     
-    func session(session: WCSession, didReceiveMessage incomingMessage: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+    func session(session: WCSession, didReceiveMessage incomingMessage: [String : AnyObject], replyhandler: @escaping ([String : AnyObject]) -> Void) {
         NSLog("Received message: \(incomingMessage)")
 
         var message: JSONDictionary? = nil
@@ -544,7 +550,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 extension Thing {
     func imageName() -> String? {
         if let color = data["color"] as? String {
-            return "\(name.lowercaseString)-\(color)"
+            return "\(name.lowercased())-\(color)"
         }
         return nil
     }

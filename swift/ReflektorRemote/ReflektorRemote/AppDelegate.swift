@@ -37,13 +37,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
 
-    @IBAction func setPage(sender: NSTextField) {
+    @IBAction func setPage(_ sender: NSTextField) {
         if reflektor != nil {
             flareManager.setData(reflektor!, key: "page", value: sender.integerValue, sender: nil)
         }
     }
 
-    @IBAction func nextPrev(sender: NSSegmentedControl) {
+    @IBAction func nextPrev(_ sender: NSSegmentedControl) {
         if reflektor != nil {
             switch sender.selectedSegment {
             case 0: flareManager.performAction(reflektor!, action: "prev", sender: nil)
@@ -53,7 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
     
-    @IBAction func setProduct(sender: NSPopUpButton) {
+    @IBAction func setProduct(_ sender: NSPopUpButton) {
         if reflektor != nil {
             if let product = sender.selectedItem?.title.lowercaseString {
                 flareManager.setData(reflektor!, key: "product", value: product, sender: nil)
@@ -61,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, FlareManagerDelegate {
         }
     }
     
-    @IBAction func setStyle(sender: NSSlider) {
+    @IBAction func setStyle(_ sender: NSSlider) {
         if reflektor != nil {
             flareManager.setData(reflektor!, key: "index", value: sender.integerValue, sender: nil)
         }

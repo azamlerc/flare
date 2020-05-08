@@ -11,7 +11,7 @@ import Foundation
 public class APIManager: NSObject {
     
     public var server = "http://localhost:80"
-    public var debugHttp = false
+    public var debugHttp = true
 
     public enum HTTPMethod: String {
         case GET = "GET"
@@ -26,34 +26,34 @@ public class APIManager: NSObject {
         params: JSONDictionary?,
         method: HTTPMethod,
         message: JSONDictionary?,
-        handler:(AnyObject, NSURLRequest, NSURLResponse?, Double) -> ())
+        handler: @escaping (AnyObject, NSURLRequest, URLResponse?, Double) -> ())
     {
         let startTime = NSDate()
-        let url = urlWithParams(uri, params:params)
-        let request = NSMutableURLRequest(URL:url)
-        request.HTTPMethod = method.rawValue
+        let url = urlWithParams(uri: uri, params:params)
+        let request = NSMutableURLRequest(url:url as URL)
+        request.httpMethod = method.rawValue
         
-        if debugHttp { NSLog("url: \(request.HTTPMethod) \(url)") }
+        if debugHttp { NSLog("url: \(request.httpMethod) \(url)") }
         
         if (message != nil) {
-            let messageData = try? NSJSONSerialization.dataWithJSONObject(message!, options:[])
-            let messageString = NSString(data: messageData!, encoding: NSUTF8StringEncoding)
+            let messageData = try? JSONSerialization.data(withJSONObject: message!, options:[])
+            let messageString = NSString(data: messageData!, encoding: String.Encoding.utf8.rawValue)
             
-            request.HTTPBody = messageData
+            request.httpBody = messageData
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             
-            if debugHttp { NSLog("message: \(messageString)") }
+            if debugHttp { NSLog("message: \(messageString!)") }
         }
         
-        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(),
-            completionHandler: {(response: NSURLResponse?, data: NSData?, error: NSError?) -> () in
+        NSURLConnection.sendAsynchronousRequest(request as URLRequest, queue: OperationQueue.main,
+                                                completionHandler: {(response: URLResponse?, data: Data?, error: Error?) -> () in
                 if error == nil {
                     let duration = 0 - startTime.timeIntervalSinceNow
-                    if let json: AnyObject = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])  {
+                    if let json: AnyObject = try! JSONSerialization.jsonObject(with: data!, options: []) as AnyObject?  {
                         handler(json, request, response, duration)
                     } else {
-                        let result = NSString(data: data!, encoding: NSUTF8StringEncoding)!
-                        handler(["result":result], request, response, duration)
+                        let result = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
+                        handler(["result":result] as NSDictionary, request, response, duration)
                     }
                 } else {
                     NSLog("Error: \(error!.localizedDescription)")
@@ -67,43 +67,43 @@ public class APIManager: NSObject {
         params: JSONDictionary?,
         method: HTTPMethod,
         message: JSONDictionary?,
-        handler:(AnyObject) -> ())
+        handler: @escaping (AnyObject) -> ())
     {
-        sendRequestDetailed(uri, params:params, method:method, message:message) {(json, request, response, duration)->() in handler(json) }
+        sendRequestDetailed(uri: uri, params:params, method:method, message:message) {(json, request, response, duration)->() in handler(json) }
     }
     
     // GET request, takes a uri and params
     // handler called with json and other info
     public func sendRequestDetailed(uri: String,
         params: JSONDictionary?,
-        handler:(AnyObject, NSURLRequest, NSURLResponse?, Double) -> ())
+        handler: @escaping (AnyObject, NSURLRequest, URLResponse?, Double) -> ())
     {
-        sendRequestDetailed(uri, params:params, method:.GET, message:nil, handler:handler)
+        sendRequestDetailed(uri: uri, params:params, method:.GET, message:nil, handler:handler)
     }
     
     // GET request, takes a uri and params
     // handler called with json only
-    public func sendRequest(uri: String, params: JSONDictionary?, handler:(AnyObject) -> ()) {
-        sendRequest(uri, params:params, method:.GET, message:nil, handler:handler)
+    public func sendRequest(uri: String, params: JSONDictionary?, handler: @escaping (AnyObject) -> ()) {
+        sendRequest(uri: uri, params:params, method:.GET, message:nil, handler:handler)
     }
     
     // GET request, takes a uri
     // handler called with json and other info
-    public func sendRequestDetailed(uri: String, handler:(AnyObject, NSURLRequest, NSURLResponse?, Double) -> ()) {
-        sendRequestDetailed(uri, params:nil, handler:handler)
+    public func sendRequestDetailed(uri: String, handler: @escaping (Any, NSURLRequest, URLResponse?, Double) -> ()) {
+        sendRequestDetailed(uri: uri, params:nil, handler:handler)
     }
     
     // GET request, takes a uri
     // handler called with json only
-    public func sendRequest(uri: String, handler:(AnyObject) -> ()) {
-        sendRequest(uri, params:nil, handler:handler)
+    public func sendRequest(uri: String, handler: @escaping (AnyObject) -> ()) {
+        sendRequest(uri: uri, params:nil, handler:handler)
     }
     
     // returns a fully-qualified URL with the given uri and parameters
     public func urlWithParams(uri: String, params: JSONDictionary?) -> NSURL {
-        var urlString = uri.containsString("://") ? uri : server + "/" + uri
+        var urlString = uri.contains("://") ? uri : server + "/" + uri
         if params != nil && params!.count > 0 {
-            urlString += "?" + paramString(params!)
+            urlString += "?" + paramString(params: params!)
         }
         let url: NSURL? = NSURL(string:urlString)
         return url!
@@ -112,8 +112,8 @@ public class APIManager: NSObject {
     // formats the parameters for a URL
     public func paramString(params: JSONDictionary) -> String {
         let keyValues = NSMutableArray()
-        for (key, value) in params { keyValues.addObject("\(key)=\(value)") }
-        return keyValues.componentsJoinedByString("&")
+        for (key, value) in params { keyValues.add("\(key)=\(value)") }
+        return keyValues.componentsJoined(by: "&")
     }
     
     public func jsonDict(json: AnyObject?) -> JSONDictionary {
@@ -124,9 +124,9 @@ public class APIManager: NSObject {
     }
     
     // this handler can be used to print out all info from an API call
-    public var printInfo = {(json: JSONDictionary, request: NSURLRequest, response: NSURLResponse?, duration: Double) -> () in
-        print("url: \(request.HTTPMethod) \(request.URL)")
-        if response != nil { print("response: \((response! as! NSHTTPURLResponse).statusCode)") }
+    public var printInfo = {(json: JSONDictionary, request: NSURLRequest, response: URLResponse?, duration: Double) -> () in
+        print("url: \(request.httpMethod ?? "") \(request.url!)")
+        if response != nil { print("response: \((response! as! HTTPURLResponse).statusCode)") }
         print("json: \(json)")
         print("duration: \(duration)")
     }

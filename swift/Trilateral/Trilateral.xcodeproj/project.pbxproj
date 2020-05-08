@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C9304B9C1C6811BF002FB638 /* DetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9304B9B1C6811BF002FB638 /* DetailsController.swift */; };
+		49730C122465687A0053C8DD /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49730C112465687A0053C8DD /* Starscream.framework */; };
+		49730C132465687A0053C8DD /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49730C112465687A0053C8DD /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49ABEAFB246579B90075E43E /* SocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49ABEAFA246579B90075E43E /* SocketIO.framework */; };
+		49ABEAFC246579B90075E43E /* SocketIO.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49ABEAFA246579B90075E43E /* SocketIO.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49ABEB06246588D50075E43E /* Flare.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49ABEB05246588D40075E43E /* Flare.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C94290E71C1B83A400FFAA84 /* ColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94290E61C1B83A400FFAA84 /* ColorButton.swift */; };
 		C95CEBF91C1209B100C3A226 /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95CEBF81C1209B100C3A226 /* CompassView.swift */; };
 		C95CEBFB1C163A1700C3A226 /* DeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95CEBFA1C163A1700C3A226 /* DeviceController.swift */; };
@@ -50,20 +54,6 @@
 		C95E8F9E1C5C115F00C30E8E /* knopparp-yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = C95E8F791C5C115F00C30E8E /* knopparp-yellow.png */; };
 		C95E8FA01C6125AE00C30E8E /* CatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95E8F9F1C6125AE00C30E8E /* CatalogController.swift */; };
 		C95E8FA21C6129CB00C30E8E /* ThingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95E8FA11C6129CB00C30E8E /* ThingCell.swift */; };
-		C95E8FA91C67F28E00C30E8E /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C95E8FA71C67F28E00C30E8E /* Interface.storyboard */; };
-		C95E8FAB1C67F28E00C30E8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C95E8FAA1C67F28E00C30E8E /* Assets.xcassets */; };
-		C95E8FB21C67F28E00C30E8E /* Things Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C95E8FB11C67F28E00C30E8E /* Things Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C95E8FB71C67F28E00C30E8E /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95E8FB61C67F28E00C30E8E /* InterfaceController.swift */; };
-		C95E8FB91C67F28E00C30E8E /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95E8FB81C67F28E00C30E8E /* ExtensionDelegate.swift */; };
-		C95E8FBB1C67F28E00C30E8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C95E8FBA1C67F28E00C30E8E /* Assets.xcassets */; };
-		C95E8FBF1C67F28E00C30E8E /* Things.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C95E8FA51C67F28E00C30E8E /* Things.app */; };
-		C95E8FC91C67F65D00C30E8E /* TableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95E8FC81C67F65D00C30E8E /* TableRow.swift */; };
-		C95E8FD21C67F90D00C30E8E /* FlareModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95E8FD11C67F90D00C30E8E /* FlareModel.swift */; };
-		C95E8FD41C67F95B00C30E8E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95E8FD31C67F95B00C30E8E /* Extensions.swift */; };
-		C98970751B81E90900DAB978 /* Flare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C98970741B81E90900DAB978 /* Flare.framework */; };
-		C98970771B81E91700DAB978 /* SocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C98970761B81E91700DAB978 /* SocketIO.framework */; };
-		C98970791B81E93100DAB978 /* SocketIO.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C98970761B81E91700DAB978 /* SocketIO.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C989707A1B81E93100DAB978 /* Flare.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C98970741B81E90900DAB978 /* Flare.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C9D1AA431AC1F5850003B8A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D1AA421AC1F5850003B8A1 /* AppDelegate.swift */; };
 		C9D1AA451AC1F5850003B8A1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D1AA441AC1F5850003B8A1 /* MapViewController.swift */; };
 		C9D1AA481AC1F5850003B8A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9D1AA461AC1F5850003B8A1 /* Main.storyboard */; };
@@ -77,42 +67,13 @@
 		C9D3976B1C18D424006E6343 /* NearbyThingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D3976A1C18D424006E6343 /* NearbyThingController.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		C95E8FB31C67F28E00C30E8E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C9D1AA351AC1F5850003B8A1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C95E8FB01C67F28E00C30E8E;
-			remoteInfo = "Things Extension";
-		};
-		C95E8FBD1C67F28E00C30E8E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C9D1AA351AC1F5850003B8A1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C95E8FA41C67F28E00C30E8E;
-			remoteInfo = Things;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		C95E8FC31C67F28E00C30E8E /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				C95E8FB21C67F28E00C30E8E /* Things Extension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C95E8FC71C67F28E00C30E8E /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				C95E8FBF1C67F28E00C30E8E /* Things.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,15 +84,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C98970791B81E93100DAB978 /* SocketIO.framework in CopyFiles */,
-				C989707A1B81E93100DAB978 /* Flare.framework in CopyFiles */,
+				49ABEB06246588D50075E43E /* Flare.framework in CopyFiles */,
+				49730C132465687A0053C8DD /* Starscream.framework in CopyFiles */,
+				49ABEAFC246579B90075E43E /* SocketIO.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C9304B9B1C6811BF002FB638 /* DetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsController.swift; sourceTree = "<group>"; };
+		49730C112465687A0053C8DD /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = ../Flare/Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
+		49ABEAFA246579B90075E43E /* SocketIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketIO.framework; path = ../Flare/Carthage/Build/iOS/SocketIO.framework; sourceTree = "<group>"; };
+		49ABEB05246588D40075E43E /* Flare.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Flare.framework; path = "../Build/Release-iphonesimulator/Flare.framework"; sourceTree = "<group>"; };
 		C94290E61C1B83A400FFAA84 /* ColorButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorButton.swift; sourceTree = "<group>"; };
 		C95CEBF81C1209B100C3A226 /* CompassView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
 		C95CEBFA1C163A1700C3A226 /* DeviceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceController.swift; sourceTree = "<group>"; };
@@ -174,18 +138,6 @@
 		C95E8F791C5C115F00C30E8E /* knopparp-yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "knopparp-yellow.png"; sourceTree = "<group>"; };
 		C95E8F9F1C6125AE00C30E8E /* CatalogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CatalogController.swift; sourceTree = "<group>"; };
 		C95E8FA11C6129CB00C30E8E /* ThingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThingCell.swift; sourceTree = "<group>"; };
-		C95E8FA51C67F28E00C30E8E /* Things.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Things.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C95E8FA81C67F28E00C30E8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
-		C95E8FAA1C67F28E00C30E8E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C95E8FAC1C67F28E00C30E8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C95E8FB11C67F28E00C30E8E /* Things Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Things Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C95E8FB61C67F28E00C30E8E /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
-		C95E8FB81C67F28E00C30E8E /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
-		C95E8FBA1C67F28E00C30E8E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C95E8FBC1C67F28E00C30E8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C95E8FC81C67F65D00C30E8E /* TableRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableRow.swift; sourceTree = "<group>"; };
-		C95E8FD11C67F90D00C30E8E /* FlareModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlareModel.swift; path = ../Things/FlareModel.swift; sourceTree = "<group>"; };
-		C95E8FD31C67F95B00C30E8E /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C98970741B81E90900DAB978 /* Flare.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Flare.framework; path = "../../Flare/Output/Release-iphoneos/Flare.framework"; sourceTree = "<group>"; };
 		C98970761B81E91700DAB978 /* SocketIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketIO.framework; path = "../../SocketIO/Output/Release-iphoneos/SocketIO.framework"; sourceTree = "<group>"; };
 		C9C2DF131B98A334009E51AE /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -204,27 +156,30 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C95E8FAE1C67F28E00C30E8E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C9D1AA3A1AC1F5850003B8A1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				C9D1AA651AC1FA100003B8A1 /* CoreBluetooth.framework in Frameworks */,
-				C98970751B81E90900DAB978 /* Flare.framework in Frameworks */,
 				C9D1AA631AC1F6F10003B8A1 /* CoreLocation.framework in Frameworks */,
-				C98970771B81E91700DAB978 /* SocketIO.framework in Frameworks */,
+				49730C122465687A0053C8DD /* Starscream.framework in Frameworks */,
+				49ABEAFB246579B90075E43E /* SocketIO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49730C10246568790053C8DD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				49ABEB05246588D40075E43E /* Flare.framework */,
+				49ABEAFA246579B90075E43E /* SocketIO.framework */,
+				49730C112465687A0053C8DD /* Starscream.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C95E8F541C5C115F00C30E8E /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -270,39 +225,6 @@
 			path = images;
 			sourceTree = "<group>";
 		};
-		C95E8FA61C67F28E00C30E8E /* Things */ = {
-			isa = PBXGroup;
-			children = (
-				C95E8FD01C67F8EB00C30E8E /* Model */,
-				C95E8FA71C67F28E00C30E8E /* Interface.storyboard */,
-				C95E8FAA1C67F28E00C30E8E /* Assets.xcassets */,
-				C95E8FAC1C67F28E00C30E8E /* Info.plist */,
-			);
-			path = Things;
-			sourceTree = "<group>";
-		};
-		C95E8FB51C67F28E00C30E8E /* Things Extension */ = {
-			isa = PBXGroup;
-			children = (
-				C95E8FB61C67F28E00C30E8E /* InterfaceController.swift */,
-				C9304B9B1C6811BF002FB638 /* DetailsController.swift */,
-				C95E8FD11C67F90D00C30E8E /* FlareModel.swift */,
-				C95E8FD31C67F95B00C30E8E /* Extensions.swift */,
-				C95E8FB81C67F28E00C30E8E /* ExtensionDelegate.swift */,
-				C95E8FBA1C67F28E00C30E8E /* Assets.xcassets */,
-				C95E8FBC1C67F28E00C30E8E /* Info.plist */,
-				C95E8FC81C67F65D00C30E8E /* TableRow.swift */,
-			);
-			path = "Things Extension";
-			sourceTree = "<group>";
-		};
-		C95E8FD01C67F8EB00C30E8E /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Model;
-			sourceTree = "<group>";
-		};
 		C9887ECE1C18EEDB008FBD21 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -330,9 +252,8 @@
 			isa = PBXGroup;
 			children = (
 				C9D1AA3F1AC1F5850003B8A1 /* Trilateral */,
-				C95E8FA61C67F28E00C30E8E /* Things */,
-				C95E8FB51C67F28E00C30E8E /* Things Extension */,
 				C9D1AA3E1AC1F5850003B8A1 /* Products */,
+				49730C10246568790053C8DD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -340,8 +261,6 @@
 			isa = PBXGroup;
 			children = (
 				C9D1AA3D1AC1F5850003B8A1 /* Trilateral.app */,
-				C95E8FA51C67F28E00C30E8E /* Things.app */,
-				C95E8FB11C67F28E00C30E8E /* Things Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -385,40 +304,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C95E8FA41C67F28E00C30E8E /* Things */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C95E8FC41C67F28E00C30E8E /* Build configuration list for PBXNativeTarget "Things" */;
-			buildPhases = (
-				C95E8FA31C67F28E00C30E8E /* Resources */,
-				C95E8FC31C67F28E00C30E8E /* Embed App Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C95E8FB41C67F28E00C30E8E /* PBXTargetDependency */,
-			);
-			name = Things;
-			productName = Things;
-			productReference = C95E8FA51C67F28E00C30E8E /* Things.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		C95E8FB01C67F28E00C30E8E /* Things Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C95E8FC01C67F28E00C30E8E /* Build configuration list for PBXNativeTarget "Things Extension" */;
-			buildPhases = (
-				C95E8FAD1C67F28E00C30E8E /* Sources */,
-				C95E8FAE1C67F28E00C30E8E /* Frameworks */,
-				C95E8FAF1C67F28E00C30E8E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Things Extension";
-			productName = "Things Extension";
-			productReference = C95E8FB11C67F28E00C30E8E /* Things Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
-		};
 		C9D1AA3C1AC1F5850003B8A1 /* Trilateral */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C9D1AA5C1AC1F5860003B8A1 /* Build configuration list for PBXNativeTarget "Trilateral" */;
@@ -432,7 +317,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C95E8FBE1C67F28E00C30E8E /* PBXTargetDependency */,
 			);
 			name = Trilateral;
 			productName = Trilateral;
@@ -447,25 +331,19 @@
 			attributes = {
 				LastSwiftMigration = 0710;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Cisco;
 				TargetAttributes = {
-					C95E8FA41C67F28E00C30E8E = {
-						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = UN88H9QU8J;
-					};
-					C95E8FB01C67F28E00C30E8E = {
-						CreatedOnToolsVersion = 7.2;
-					};
 					C9D1AA3C1AC1F5850003B8A1 = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = UN88H9QU8J;
+						DevelopmentTeam = 5NSX786795;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = C9D1AA381AC1F5850003B8A1 /* Build configuration list for PBXProject "Trilateral" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -477,30 +355,11 @@
 			projectRoot = "";
 			targets = (
 				C9D1AA3C1AC1F5850003B8A1 /* Trilateral */,
-				C95E8FA41C67F28E00C30E8E /* Things */,
-				C95E8FB01C67F28E00C30E8E /* Things Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C95E8FA31C67F28E00C30E8E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C95E8FAB1C67F28E00C30E8E /* Assets.xcassets in Resources */,
-				C95E8FA91C67F28E00C30E8E /* Interface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C95E8FAF1C67F28E00C30E8E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C95E8FBB1C67F28E00C30E8E /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C9D1AA3B1AC1F5850003B8A1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -552,19 +411,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C95E8FAD1C67F28E00C30E8E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C95E8FD41C67F95B00C30E8E /* Extensions.swift in Sources */,
-				C95E8FB91C67F28E00C30E8E /* ExtensionDelegate.swift in Sources */,
-				C95E8FB71C67F28E00C30E8E /* InterfaceController.swift in Sources */,
-				C95E8FD21C67F90D00C30E8E /* FlareModel.swift in Sources */,
-				C9304B9C1C6811BF002FB638 /* DetailsController.swift in Sources */,
-				C95E8FC91C67F65D00C30E8E /* TableRow.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C9D1AA391AC1F5850003B8A1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -584,28 +430,7 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		C95E8FB41C67F28E00C30E8E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C95E8FB01C67F28E00C30E8E /* Things Extension */;
-			targetProxy = C95E8FB31C67F28E00C30E8E /* PBXContainerItemProxy */;
-		};
-		C95E8FBE1C67F28E00C30E8E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C95E8FA41C67F28E00C30E8E /* Things */;
-			targetProxy = C95E8FBD1C67F28E00C30E8E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
-		C95E8FA71C67F28E00C30E8E /* Interface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C95E8FA81C67F28E00C30E8E /* Base */,
-			);
-			name = Interface.storyboard;
-			sourceTree = "<group>";
-		};
 		C9D1AA461AC1F5850003B8A1 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -625,99 +450,47 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		C95E8FC11C67F28E00C30E8E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Things Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.cisco.flare.Trilateral.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 2.1;
-			};
-			name = Debug;
-		};
-		C95E8FC21C67F28E00C30E8E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Things Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.cisco.flare.Trilateral.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 2.1;
-			};
-			name = Release;
-		};
-		C95E8FC51C67F28E00C30E8E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				IBSC_MODULE = Things_Extension;
-				INFOPLIST_FILE = Things/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cisco.flare.Trilateral.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 2.1;
-			};
-			name = Debug;
-		};
-		C95E8FC61C67F28E00C30E8E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				IBSC_MODULE = Things_Extension;
-				INFOPLIST_FILE = Things/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cisco.flare.Trilateral.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 2.1;
-			};
-			name = Release;
-		};
 		C9D1AA5A1AC1F5860003B8A1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"../Flare/Output/Debug-iphoneos",
+					../Flare/Carthage/Build/iOS,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -735,6 +508,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -743,24 +517,42 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"../Flare/Output/Debug-iphoneos",
+					../Flare/Carthage/Build/iOS,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -770,6 +562,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -779,18 +573,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5NSX786795;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"../Flare/Output/Release-iphoneos",
-					"../SocketIO/Output/Release-iphoneos",
+					"../Flare/Output/Debug-iphoneos",
+					../Flare/Carthage/Build/iOS,
 				);
 				INFOPLIST_FILE = Trilateral/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)com.cisco.flare.Trilateral";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kavasoft.Trilateral;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "13d2036f-29dc-4c2c-825e-0ca42711dabb";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -798,42 +595,27 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5NSX786795;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"../Flare/Output/Release-iphoneos",
-					"../SocketIO/Output/Release-iphoneos",
+					"../Flare/Output/Debug-iphoneos",
+					../Flare/Carthage/Build/iOS,
 				);
 				INFOPLIST_FILE = Trilateral/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)com.cisco.flare.Trilateral";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kavasoft.Trilateral;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "13d2036f-29dc-4c2c-825e-0ca42711dabb";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C95E8FC01C67F28E00C30E8E /* Build configuration list for PBXNativeTarget "Things Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C95E8FC11C67F28E00C30E8E /* Debug */,
-				C95E8FC21C67F28E00C30E8E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C95E8FC41C67F28E00C30E8E /* Build configuration list for PBXNativeTarget "Things" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C95E8FC51C67F28E00C30E8E /* Debug */,
-				C95E8FC61C67F28E00C30E8E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		C9D1AA381AC1F5850003B8A1 /* Build configuration list for PBXProject "Trilateral" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

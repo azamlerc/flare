@@ -16,8 +16,8 @@ public class LightManager: APIManager {
         self.server = "http://\(hub)/api/\(user)/lights/\(light)"
     }
 
-    public func getLight(handler:(JSONDictionary) -> ()) {
-        sendRequest("") {json in
+    public func getLight(handler: @escaping (JSONDictionary) -> ()) {
+        sendRequest(uri: "") {json in
             if let state = json["state"] as? JSONDictionary {
                 handler(state)
             }
@@ -25,17 +25,17 @@ public class LightManager: APIManager {
 
     }
     
-    public func setPower(on: Bool, handler:(JSONArray) -> ()) {
-        sendRequest("state", params: nil, method: .PUT, message: ["on":on]) {json in
+    public func setPower(on: Bool, handler: @escaping (JSONArray) -> ()) {
+        sendRequest(uri: "state", params: nil, method: .PUT, message: ["on":on]) {json in
             if let jsonArray = json as? JSONArray {
                 handler(jsonArray)
             }
         }
     }
 
-    public func setColor(hue: Int, saturation: Int, brightness: Int, handler:(JSONArray) -> ()) {
+    public func setColor(hue: Int, saturation: Int, brightness: Int, handler: @escaping (JSONArray) -> ()) {
         let message = ["hue":hue, "sat":saturation, "bri":brightness]
-        sendRequest("state", params: nil, method: .PUT, message: message) {json in
+        sendRequest(uri: "state", params: nil, method: .PUT, message: message) {json in
             if let jsonArray = json as? JSONArray {
                 handler(jsonArray)
             }

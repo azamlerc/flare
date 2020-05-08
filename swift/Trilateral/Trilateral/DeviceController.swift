@@ -11,7 +11,7 @@ import Flare
 
 class DeviceController: UIViewController, FlareController {
 
-    var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     @IBOutlet weak var environmentLabel: UILabel!
     @IBOutlet weak var environmentComment: UILabel!
@@ -29,7 +29,7 @@ class DeviceController: UIViewController, FlareController {
     var device: Device? { didSet { dataChanged() }}
     var nearbyThing: Thing? { didSet(value) { dataChanged() }}
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         appDelegate.flareController = self
         appDelegate.updateFlareController()
@@ -48,7 +48,7 @@ class DeviceController: UIViewController, FlareController {
         nearbyThingComment.text = nearbyThing?.comment ?? ""
         
         if let position = device?.position {
-            positionLabel.text = String(format: "%.2f, %.2f, %.2f", position.x.roundTo(0.05), position.y.roundTo(0.05), position.z.roundTo(0.05))
+            positionLabel.text = String(format: "%.2f, %.2f, %.2f", position.x.roundTo(precision: 0.05), position.y.roundTo(precision: 0.05), position.z.roundTo(precision: 0.05))
         } else {
             positionLabel.text = "0.00, 0.00, 0.00"
         }
@@ -64,15 +64,15 @@ class DeviceController: UIViewController, FlareController {
 
     }
     
-    @IBAction func nextEnvironment(sender: AnyObject?) {
+    @IBAction func nextEnvironment(_ sender: AnyObject?) {
         appDelegate.nextEnvironment()
     }
     
-    @IBAction func previousEnvironment(sender: AnyObject?) {
+    @IBAction func previousEnvironment(_ sender: AnyObject?) {
         appDelegate.previousEnvironment()
     }
     
-    @IBAction func reload(sender: AnyObject?) {
+    @IBAction func reload(_ sender: AnyObject?) {
         appDelegate.reload()
     }
 }

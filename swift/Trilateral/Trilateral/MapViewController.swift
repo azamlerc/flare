@@ -14,14 +14,14 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var indoorMap: IndoorMap!
     
-    var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         appDelegate.flareController = indoorMap
         appDelegate.updateFlareController()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
 
     }
     

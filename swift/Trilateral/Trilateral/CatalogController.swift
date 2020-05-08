@@ -11,7 +11,7 @@ import Flare
 
 class CatalogController: UITableViewController, FlareController {
     
-    var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     let thingCellIdentifier = "ThingCell"
     
     var currentEnvironment: Environment? { didSet(value) {
@@ -24,39 +24,39 @@ class CatalogController: UITableViewController, FlareController {
             dataChanged()
         }}
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0)
+        self.tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         appDelegate.flareController = self
         appDelegate.updateFlareController()
         
         dataChanged()
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in: UITableView) -> Int {
         if currentEnvironment == nil { return 0 }
         return currentEnvironment!.zones.count
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ : UITableView, titleForHeaderInSection: Int) -> String? {
         if currentEnvironment == nil { return "" }
-        return currentEnvironment!.zones[section].name
+        return currentEnvironment!.zones[titleForHeaderInSection].name
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentEnvironment!.zones[section].things.count
+    override func tableView(_: UITableView, numberOfRowsInSection: Int) -> Int {
+        return currentEnvironment!.zones[numberOfRowsInSection].things.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(thingCellIdentifier) as! ThingCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: thingCellIdentifier) as! ThingCell
         cell.device = device
         cell.thing = currentEnvironment!.zones[indexPath.section].things[indexPath.row]
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_: UITableView, didSelectRowAt: IndexPath) {
         if currentEnvironment != nil {
-            let thing = currentEnvironment!.zones[indexPath.section].things[indexPath.row]
+            let thing = currentEnvironment!.zones[didSelectRowAt.section].things[didSelectRowAt.row]
             appDelegate.nearbyThing = thing
         }
     }
@@ -64,17 +64,17 @@ class CatalogController: UITableViewController, FlareController {
     func dataChanged() {
         if currentEnvironment != nil {
             for zone in currentEnvironment!.zones {
-                zone.things.sortInPlace({
-                    return device!.distanceTo($0) < device!.distanceTo($1)
-                })
+                zone.things.sort {
+                    return device!.distanceTo(thing: $0) < device!.distanceTo(thing: $1)
+                }
             }
 
             self.tableView.reloadData()
             
-            for (section, zone) in currentEnvironment!.zones.enumerate() {
-                for (row, thing) in zone.things.enumerate() {
+            for (section, zone) in currentEnvironment!.zones.enumerated() {
+                for (row, thing) in zone.things.enumerated() {
                     if thing == nearbyThing {
-                        self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: row, inSection: section), animated: false, scrollPosition: .None)
+                        self.tableView.selectRow(at: NSIndexPath(row: row, section: section) as IndexPath, animated: false, scrollPosition: .none)
                     }
                 }
             }

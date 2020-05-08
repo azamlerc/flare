@@ -17,18 +17,18 @@ let maxDistance: CGFloat = 12.0
 let minSweep: CGFloat = 5
 let maxSweep: CGFloat = 40
 
-let backgroundColor = UIColor.grayColor()
+let backgroundColor = UIColor.gray
 let ringColor = UIColor(white: 0.2, alpha: 1.0)
-let northColor = UIColor.redColor()
+let northColor = UIColor.red
 
 let showTicks = false
 let tickColor = UIColor(white: 1.0, alpha: 0.3)
 let tick2Color = UIColor(white: 1.0, alpha: 0.1)
-let circleColor = UIColor.blackColor()
+let circleColor = UIColor.black
 
 class CompassView: UIView, FlareController {
     
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var currentEnvironment: Environment? {
         didSet {
             updateFlipped()
@@ -59,7 +59,7 @@ class CompassView: UIView, FlareController {
         appDelegate.flareController = self
         appDelegate.updateFlareController()
        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:#selector(CompassView.orientationDidChange(_:)), name: UIApplicationDidChangeStatusBarOrientationNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector:#selector(CompassView.orientationDidChange(note:)), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
     }
     
     override func awakeFromNib() {
@@ -67,7 +67,7 @@ class CompassView: UIView, FlareController {
         updateLayout()
     }
     
-    func orientationDidChange(note: NSNotification) {
+    @objc func orientationDidChange(note: NSNotification) {
         updateLayout()
         dataChanged()
     }
@@ -117,7 +117,7 @@ class CompassView: UIView, FlareController {
         }
     }
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         // let background = NSBezierPath(rect: self.bounds)
         // backgroundColor.setFill()
         // background.fill()
@@ -132,11 +132,11 @@ class CompassView: UIView, FlareController {
         let circleBounds = CGRect(x: center.x - radius, y: center.y - radius,
             width: 2 * radius, height: 2 * radius)
         
-        let outerRing = UIBezierPath(ovalInRect: circleBounds)
+        let outerRing = UIBezierPath(ovalIn: circleBounds)
         ringColor.setFill()
         outerRing.fill()
         
-        let innerRing = UIBezierPath(ovalInRect: circleBounds.insetBy(dx: radius * ring, dy: radius * ring))
+        let innerRing = UIBezierPath(ovalIn: circleBounds.insetBy(dx: radius * ring, dy: radius * ring))
         circleColor.setFill()
         innerRing.fill()
         
@@ -145,31 +145,31 @@ class CompassView: UIView, FlareController {
             heading = CGFloat(device!.angle())
             
             for zone in currentEnvironment!.zones {
-                if zone.perimeter.contains(device!.position) {
-                    let things = zone.things.sort({device!.distanceTo($0) > device!.distanceTo($1)})
+                if zone.perimeter.contains(point: device!.position) {
+                    let things = zone.things.sorted(by: {device!.distanceTo(thing: $0) > device!.distanceTo(thing: $1)})
                     for thing in things {
                         let selected = selectedThing == thing || nearbyThing == thing
-                        drawFin(thing, color: IndoorMap.colorForThing(thing), selected: selected,
+                        drawFin(thing: thing, color: IndoorMap.colorForThing(thing: thing), selected: selected,
                             center: center, radius: radius)
                     }
                 }
             }
         }
 
-        drawArc(tick2Color, center: center, radius: radius, direction: convertAngle(0.0), sweep: 360, thickness: 0.05)
+        drawArc(color: tick2Color, center: center, radius: radius, direction: convertAngle(angle: 0.0), sweep: 360, thickness: 0.05)
         
         if showTicks {
             for i in 0...7 {
                 let angle = 45 * CGFloat(i)
                 let color = angle == 90.0 ? northColor : tickColor
-                drawArc(color, center: center, radius: radius, direction: convertAngle(angle), sweep: 1, thickness: 0.1)
-                drawArc(tick2Color, center: center, radius: radius, direction: convertAngle(22.5 + angle), sweep: 1, thickness: 0.1)
+                drawArc(color: color, center: center, radius: radius, direction: convertAngle(angle: angle), sweep: 1, thickness: 0.1)
+                drawArc(color: tick2Color, center: center, radius: radius, direction: convertAngle(angle: 22.5 + angle), sweep: 1, thickness: 0.1)
             }
         }
     }
     
     func convertAngle(angle: CGFloat) -> CGFloat {
-        return (angle * (flipped ? -1 : 1) + heading - offset) % 360.0
+        return (angle * (flipped ? -1 : 1) + heading - offset).truncatingRemainder(dividingBy: 60.0)
     }
     
     func sweepForDistance(distance: CGFloat) -> CGFloat {
@@ -184,52 +184,52 @@ class CompassView: UIView, FlareController {
     
     func drawFin(thing: Thing, color: UIColor, selected: Bool, center: CGPoint, radius: CGFloat) {
         if device != nil {
-            let distance = CGFloat(device!.distanceTo(thing))
+            let distance = CGFloat(device!.distanceTo(thing: thing))
             if distance == 0 { return } // not meaningful to draw a fin if in the device and thing are in the same place
-            let direction = CGFloat(device!.angleTo(thing))
-            let sweep = sweepForDistance(distance)
+            let direction = CGFloat(device!.angleTo(thing: thing))
+            let sweep = sweepForDistance(distance: distance)
             let thickness = CGFloat(selected ? 0.2 : 0.1)
-            drawArc(color, center: center, radius: radius, direction: convertAngle(direction), sweep: sweep, thickness: thickness)
+            drawArc(color: color, center: center, radius: radius, direction: convertAngle(angle: direction), sweep: sweep, thickness: thickness)
         }
     }
     
     func drawArc(color: UIColor, center: CGPoint, radius: CGFloat, direction: CGFloat, sweep: CGFloat, thickness: CGFloat) {
         let arc = UIBezierPath()
-        let start: CGFloat = 0 - CGFloat(degreesToRadians(Double(direction - (sweep / 2.0))))
-        let end: CGFloat = 0 - CGFloat(degreesToRadians(Double(direction + (sweep / 2.0))))
-        arc.addArcWithCenter(center, radius: radius, startAngle: start, endAngle: end, clockwise: false)
-        arc.addArcWithCenter(center, radius: radius * (1.0 - thickness), startAngle: end, endAngle: start, clockwise: true)
-        arc.closePath()
+        let start: CGFloat = 0 - CGFloat(degreesToRadians(degrees: Double(direction - (sweep / 2.0))))
+        let end: CGFloat = 0 - CGFloat(degreesToRadians(degrees: Double(direction + (sweep / 2.0))))
+        arc.addArc(withCenter: center, radius: radius, startAngle: start, endAngle: end, clockwise: false)
+        arc.addArc(withCenter: center, radius: radius * (1.0 - thickness), startAngle: end, endAngle: start, clockwise: true)
+        arc.close()
         color.setFill()
         arc.fill()
     }
 
     // sender.identifier can contain several words
     // the first word is the action
-    @IBAction func performAction(sender: UIButton) {
-        let identifiers = sender.accessibilityIdentifier!.componentsSeparatedByString(" ")
+    @IBAction func performAction(_ sender: UIButton) {
+        let identifiers = sender.accessibilityIdentifier!.components(separatedBy: " ")
         let action = identifiers.first!
         
-        if device != nil { appDelegate.flareManager.performAction(device!, action: action, sender: nil) }
+        if device != nil { appDelegate.flareManager.performAction(flare: device!, action: action, sender: nil) }
     }
     
     var touchedThing: Thing?
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
-            let point = touch.locationInView(self)
+            let point = touch.location(in: self)
             let angle = atan2(point.y - self.center.y, point.x - self.center.x)
-            var degrees = 0 - angle * CGFloat(180.0 / M_PI)
+            var degrees = 0 - angle * CGFloat(180.0 / Double.pi)
             if degrees < 0 { degrees += 360 }
             // NSLog("angle: \(degrees)")
             
-            if let thing = thingAtAngle(degrees) {
+            if let thing = thingAtAngle(angle: degrees) {
                 touchedThing = thing
             }
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if touchedThing != nil {
             appDelegate.nearbyThing = touchedThing
         }
@@ -241,15 +241,15 @@ class CompassView: UIView, FlareController {
             heading = CGFloat(device!.angle())
             
             for zone in currentEnvironment!.zones {
-                if zone.perimeter.contains(device!.position) {
-                    let things = zone.things.sort({device!.distanceTo($0) > device!.distanceTo($1)})
+                if zone.perimeter.contains(point: device!.position) {
+                    let things = zone.things.sorted(by: {device!.distanceTo(thing: $0) > device!.distanceTo(thing: $1)})
                     for thing in things {
-                        let distance = CGFloat(device!.distanceTo(thing))
+                        let distance = CGFloat(device!.distanceTo(thing: thing))
                         if distance > 0 {
-                            let direction = CGFloat(device!.angleTo(thing))
-                            let sweep = sweepForDistance(distance)
-                            var minAngle = convertAngle(direction - sweep / 2.0)
-                            var maxAngle = convertAngle(direction + sweep / 2.0)
+                            let direction = CGFloat(device!.angleTo(thing: thing))
+                            let sweep = sweepForDistance(distance: distance)
+                            var minAngle = convertAngle(angle: direction - sweep / 2.0)
+                            var maxAngle = convertAngle(angle: direction + sweep / 2.0)
                             if minAngle < 0 { minAngle += 360 }
                             if maxAngle < 0 { maxAngle += 360 }
                             if minAngle > maxAngle { maxAngle += 360 }

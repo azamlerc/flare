@@ -31,7 +31,7 @@ class ThingCell: UITableViewCell {
             thingImage.image = UIImage(named: imageName)
         }
         
-        if let distance = device?.distanceTo(thing!) {
+        if let distance = device?.distanceTo(thing: thing!) {
             distanceLabel.text = String(format: "%.1fm", distance)
         } else {
             distanceLabel.text = ""

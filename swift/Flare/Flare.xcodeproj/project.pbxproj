@@ -182,6 +182,7 @@
 				C97E31ED1B7E18E300402556 /* Headers */,
 				C97E31EE1B7E18E300402556 /* Resources */,
 				C98970851B874F3E00DAB978 /* ShellScript */,
+				49E474BB24731F77000757D2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -206,6 +207,7 @@
 					C97E31CE1B7E18BE00402556 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 5NSX786795;
+						LastSwiftMigration = 1130;
 					};
 					C97E31EF1B7E18E300402556 = {
 						CreatedOnToolsVersion = 6.4;
@@ -251,6 +253,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		49E474BB24731F77000757D2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
 		C98970851B874F3E00DAB978 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -432,6 +451,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.kavasoft.Flare;
 				PRODUCT_NAME = Flare;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -457,6 +477,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.kavasoft.Flare;
 				PRODUCT_NAME = Flare;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

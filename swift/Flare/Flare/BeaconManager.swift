@@ -6,42 +6,42 @@
 //  Copyright (c) 2015 Cisco. All rights reserved.
 //
 
-import Foundation
-import CoreLocation
 import CoreGraphics
+import CoreLocation
+import Foundation
 
-public protocol BeaconManagerDelegate {
+public protocol BeaconManagerDelegate: class {
     func devicePositionDidChange(position: Point3D)
     func deviceLocationDidChange(location: CLLocation)
     func deviceAngleDidChange(angle: Double)
 }
 
 public class BeaconManager: NSObject, CLLocationManagerDelegate {
-    
+
     let beaconDebug = false
-    
-    public var delegate: BeaconManagerDelegate?
+
+    public weak var delegate: BeaconManagerDelegate?
     public var locationManager = CLLocationManager()
     public var region: CLBeaconRegion?
 
     public var currentLatlong: CLLocation?
-    
+
     public var environment: Environment?
-    public var beacons = [Int:Thing]()
+    public var beacons = [Int: Thing]()
     public var linearBeacons = [Thing]()
-    
-    public override init() {
+
+    override public init() {
         super.init()
-        
+
         self.locationManager.delegate = self
         // self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()
     }
 
     public func loadEnvironment(value: Environment) {
-        self.environment = value;
-        
-        if (environment != nil) {
+        self.environment = value
+
+        if environment != nil {
             if let uuidString = environment!.uuid {
                 let uuid = NSUUID(uuidString: uuidString)
                 region = CLBeaconRegion(proximityUUID: uuid! as UUID, identifier: environment!.name)
@@ -54,7 +54,7 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
             }
         }
     }
-    
+
     public func start() {
         if region != nil {
             self.locationManager.startRangingBeacons(in: region!)
@@ -70,19 +70,19 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
     public func startMonitoringLocation() {
         self.locationManager.startMonitoringSignificantLocationChanges()
     }
-    
+
     public func stopMonitoringLocation() {
         self.locationManager.stopMonitoringSignificantLocationChanges()
     }
-    
+
     public func startUpdatingHeading() {
         self.locationManager.startUpdatingHeading()
     }
-    
+
     public func stopUpdatingHeading() {
         self.locationManager.stopUpdatingHeading()
     }
-    
+
     public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
         case .notDetermined: NSLog("Not determined")
@@ -98,7 +98,7 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
         if let location = locations.last {
             // NSLog("Location: \(location)")
             currentLatlong = location
-            
+
             if delegate != nil {
                 delegate!.deviceLocationDidChange(location: location)
             }
@@ -106,8 +106,8 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
     }
 
     public func locationManager(_ manager: CLLocationManager, didRangeBeacons clbeacons: [CLBeacon], in region: CLBeaconRegion) {
-        var clBeaconIndex = [Int:CLBeacon]()
-        
+        var clBeaconIndex = [Int: CLBeacon]()
+
         if beaconDebug { NSLog("Found \(clbeacons.count) beacons.") }
 
         for clbeacon in clbeacons {
@@ -115,7 +115,7 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
             if beaconDebug { NSLog("Saw beacon: \(clbeacon.major.intValue) - \(clbeacon.minor.intValue)") }
             clBeaconIndex[index] = clbeacon
         }
-        
+
         for (index, beacon) in beacons {
             if let clbeacon = clBeaconIndex[index] {
                 if beaconDebug { NSLog("Found beacon: \(beacon.name)") }
@@ -125,7 +125,7 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
                 beacon.addDistance(distance: -1.0) // the beacon was not seen this time
             }
         }
-        
+
         if delegate != nil {
             let position = weightedLocation(average: false)
             if !position.x.isNaN && !position.y.isNaN {
@@ -133,21 +133,21 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
             }
         }
     }
-    
+
     var angleDelay = 1.0
     var lastAngleTime = NSDate()
     var lastAngle = -1.0
 
     public func locationManager(manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         let newAngle = newHeading.magneticHeading.roundTo(precision: 5.0)
-        
+
         if newAngle != lastAngle && lastAngleTime.timeIntervalSinceNow < -angleDelay {
             lastAngleTime = NSDate()
             lastAngle = newAngle
             delegate!.deviceAngleDidChange(angle: newAngle)
         }
     }
-    
+
     // the average position of all nearby beacons,
     // weighted according to the inverse of the square of the distance
     public func weightedLocation(average: Bool) -> Point3D {
@@ -155,8 +155,8 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
         var x = 0.0
         var y = 0.0
         var z = 0.0
-        
-        for (_,beacon) in beacons {
+
+        for (_, beacon) in beacons {
             let distance = average ? beacon.averageDistance() : beacon.lastDistance()
             if distance > 0 {
                 beacon.inverseDistance = 1.0 / (distance * distance)
@@ -167,46 +167,16 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
 
         var sortedBeacons = [Thing](beacons.values)
         sortedBeacons.sort { $0.inverseDistance > $1.inverseDistance }
-        
-        // let trainDemo = true
-        // var nearest: Thing?
-        // var secondNearest: Thing?
-        
-        for (_,beacon) in sortedBeacons.enumerated() {
-            if beacon.inverseDistance != -1 {
 
-                // for tracking position on a linear circuit,
-                // only use the nearest beacon and the one before or after it
-                /* if trainDemo {
-                    if nearest == nil {
-                        nearest = beacon
-                        NSLog("Nearest: \(nearest!.name)")
-                    } else if secondNearest == nil {
-                        if beacon.minor == nearest!.minor! + 1 || beacon.minor! == nearest!.minor! - 1 {
-                            secondNearest = beacon
-                            NSLog("Second nearest: \(secondNearest!.name)")
-                        } else {
-                            // other nearby beacon is not consecutive with the nearest one, so ignore it
-                            continue
-                        }
-                    } else {
-                        // we have already found two beacons, ignore the rest
-                        continue
-                    }
-                } */
-                
-                let weight = beacon.inverseDistance
-                x += Double(beacon.position.x) * weight
-                y += Double(beacon.position.y) * weight
-                z += Double(beacon.position.z) * weight
-                total += weight
-            }
+        for beacon in sortedBeacons where beacon.inverseDistance != -1 {
+            let weight = beacon.inverseDistance
+            x += Double(beacon.position.x) * weight
+            y += Double(beacon.position.y) * weight
+            z += Double(beacon.position.z) * weight
+            total += weight
         }
-        
-        let result = Point3D(x:x / total, y:y / total, z:z / total)
-        // NSLog("Result: \(result)")
+
+        let result = Point3D(x: x / total, y: y / total, z: z / total)
         return result
     }
-    
-    
 }

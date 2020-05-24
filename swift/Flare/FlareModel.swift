@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Andrew Zamler-Carhart. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 
 public class Flare: NSObject {
     public var id: String
@@ -18,7 +18,7 @@ public class Flare: NSObject {
     public var created: NSDate
     public var modified: NSDate
     public var distance: Double? // the distance from the current position
-    
+
     public init(json: JSONDictionary) {
         self.id = json.getString(key: "_id")
         self.name = json.getString(key: "name")
@@ -28,44 +28,42 @@ public class Flare: NSObject {
         self.created = json.getDate(key: "created")
         self.modified = json.getDate(key: "modified")
     }
-    
+
     public var flareClass: String {
         let className = NSStringFromClass(type(of: self)) as NSString
         return className.components(separatedBy: ".").last!
     }
-    
-    public override var description: String {
+
+    override public var description: String {
         return "\(self.flareClass) \(self.id) - \(self.name)"
     }
 
     public func setDistanceFrom(currentPosition: Point3D) {
         // override to calculate the distance
     }
-    
+
     public var flareInfo: JSONDictionary {
         var info = JSONDictionary()
         info[self.flareClass.lowercased()] = self.id
         return info
     }
-    
+
     public func parentId() -> String? {
         return nil
     }
-    
+
     public func children() -> [Flare] {
         return Array()
     }
-    
+
     public func childWithId(id: String) -> Flare? {
-        for child in children() {
-            if child.id == id {
-                return child
-            }
+        for child in children() where child.id == id {
+            return child
         }
-        
+
         return nil
     }
-    
+
     public func toJSON() -> JSONDictionary {
         var json = JSONDictionary()
         json["_id"] = self.id as AnyObject
@@ -94,7 +92,7 @@ public class Environment: Flare, FlarePerimeter {
 
     public var zones = [Zone]()
     public var devices = [Device]()
-    
+
     public class func loadJson(json: JSONDictionary) -> [Environment] {
         var results = [Environment]()
         for child in json.getArray(key: "environments") {
@@ -103,12 +101,12 @@ public class Environment: Flare, FlarePerimeter {
         }
         return results
     }
-    
-    public override init(json: JSONDictionary) {
+
+    override public init(json: JSONDictionary) {
         self.geofence = Geofence(json: json.getDictionary(key: "geofence"))
         self.perimeter = getCube3D(json: json.getDictionary(key: "perimeter"))
         self.angle = json.getDouble(key: "angle")
-        
+
         for child: JSONDictionary in json.getArray(key: "zones") {
             let zone = Zone(json: child)
             zones.append(zone)
@@ -120,19 +118,19 @@ public class Environment: Flare, FlarePerimeter {
         }
 
         super.init(json: json)
-        
+
         if let uuid = self.data["uuid"] as? String { self.uuid = uuid }
     }
-    
-    public override var description: String {
+
+    override public var description: String {
         return "\(super.description) - \(perimeter)"
     }
-    
-    public override func children() -> [Flare] {
+
+    override public func children() -> [Flare] {
         return self.zones
     }
-    
-    public override func toJSON() -> JSONDictionary {
+
+    override public func toJSON() -> JSONDictionary {
         var json = super.toJSON()
         json["geofence"] = self.geofence.toJSON() as AnyObject
         json["perimeter"] = self.perimeter.toJSON() as AnyObject
@@ -142,7 +140,7 @@ public class Environment: Flare, FlarePerimeter {
         return json
     }
 
-    public override func setDistanceFrom(currentPosition latlong: Point3D) {
+    override public func setDistanceFrom(currentPosition latlong: Point3D) {
         self.distance = self.geofence.distanceFrom(latlong: latlong.toPoint())
     }
 
@@ -157,12 +155,12 @@ public class Environment: Flare, FlarePerimeter {
                 results.append(thing)
             }
         }
-        
+
         return results
     }
 
-    public func beacons() -> [Int:Thing] {
-        var results = [Int:Thing]()
+    public func beacons() -> [Int: Thing] {
+        var results = [Int: Thing]()
         for zone in zones {
             if let major = zone.major {
                 for thing in zone.things {
@@ -173,56 +171,56 @@ public class Environment: Flare, FlarePerimeter {
                 }
             }
         }
-        
+
         return results
     }
 }
 
 public class Zone: Flare, FlarePerimeter {
     public var environmentId: String
-    
+
     public var perimeter: Cube3D
     public var center: Point3D
     public var major: Int?
-    
+
     public var things = [Thing]()
-    
-    public override init(json: JSONDictionary) {
+
+    override public init(json: JSONDictionary) {
         self.environmentId = json.getString(key: "environment")
 
         self.perimeter = getCube3D(json: json.getDictionary(key: "perimeter"))
         self.center = self.perimeter.center()
-        
+
         for child: JSONDictionary in json.getArray(key: "things") {
             let thing = Thing(json: child)
             things.append(thing)
         }
-        
+
         super.init(json: json)
 
         if let major = self.data["major"] as? Int { self.major = major }
     }
-    
-    public override var description: String {
+
+    override public var description: String {
         return "\(super.description) - \(perimeter)"
     }
 
-    public override func parentId() -> String? {
+    override public func parentId() -> String? {
         return environmentId
     }
-    
-    public override func children() -> [Flare] {
+
+    override public func children() -> [Flare] {
         return self.things
     }
 
-    public override func toJSON() -> JSONDictionary {
+    override public func toJSON() -> JSONDictionary {
         var json = super.toJSON()
         json["perimeter"] = self.perimeter.toJSON() as AnyObject
         if things.count > 0 {json["things"] = self.things.map({$0.toJSON()}) as AnyObject}
         return json
     }
 
-    public override func setDistanceFrom(currentPosition: Point3D) {
+    override public func setDistanceFrom(currentPosition: Point3D) {
         self.distance = perimeter.contains(point: currentPosition) ? 0.0 : Double(currentPosition - self.center)
     }
 }
@@ -230,14 +228,14 @@ public class Zone: Flare, FlarePerimeter {
 public class Thing: Flare, FlarePosition {
     public var environmentId: String
     public var zoneId: String
-    
+
     public var type: String
     public var position: Point3D
     public var minor: Int?
-    
+
     public var distances = [Double]()
     public var inverseDistance = 0.0
-    
+
     public class func loadJson(json: JSONDictionary) -> [Thing] {
         var results = [Thing]()
         for child in json.getArray(key: "things") {
@@ -246,34 +244,34 @@ public class Thing: Flare, FlarePosition {
         }
         return results
     }
-    
-    public override init(json: JSONDictionary) {
+
+    override public init(json: JSONDictionary) {
         self.environmentId = json.getString(key: "environment")
         self.zoneId = json.getString(key: "zone")
-        
+
         self.type = json.getString(key: "type")
         self.position = getPoint3D(json: json.getDictionary(key: "position"))
-        
+
         super.init(json: json)
 
         if let minor = self.data["minor"] as? Int { self.minor = minor }
     }
-    
-    public override var description: String {
+
+    override public var description: String {
         return "\(super.description) - \(position)"
     }
 
-    public override func parentId() -> String? {
+    override public func parentId() -> String? {
         return zoneId
     }
 
-    public override func toJSON() -> JSONDictionary {
+    override public func toJSON() -> JSONDictionary {
         var json = super.toJSON()
         json["position"] = self.position.toJSON() as AnyObject
         return json
     }
-    
-    public override func setDistanceFrom(currentPosition: Point3D) {
+
+    override public func setDistanceFrom(currentPosition: Point3D) {
         self.distance = Double(currentPosition - self.position)
     }
 
@@ -283,29 +281,27 @@ public class Thing: Flare, FlarePosition {
             distances.remove(at: 0)
         }
     }
-    
+
     public func lastDistance() -> Double {
         if distances.count > 0 {
             return distances.last!
         }
         return -1
     }
-    
+
     public func averageDistance() -> Double {
         var count = 0
         var total = 0.0
-        
-        for value in distances {
-            if value != -1 {
-                total += value
-                count += 1
-            }
+
+        for value in distances where value != -1 {
+            total += value
+            count += 1
         }
-        
+
         if count == 0 {
             return -1
         }
-        
+
         return total / Double(count)
     }
 }
@@ -314,29 +310,29 @@ public class Device: Flare, FlarePosition {
     public var environmentId: String
 
     public var position: Point3D
-    
-    public override init(json: JSONDictionary) {
+
+    override public init(json: JSONDictionary) {
         self.environmentId = json.getString(key: "environment")
 
         self.position = getPoint3D(json: json.getDictionary(key: "position"))
-        
+
         super.init(json: json)
     }
 
-    public override var description: String {
+    override public var description: String {
         return "\(super.description) - \(position)"
     }
 
-    public override func parentId() -> String? {
+    override public func parentId() -> String? {
         return environmentId
     }
-    
-    public override func toJSON() -> JSONDictionary {
+
+    override public func toJSON() -> JSONDictionary {
         var json = super.toJSON()
         json["position"] = self.position.toJSON() as AnyObject
         return json
     }
-    
+
     public func angle() -> Double {
         if let value = self.data["angle"] as? Double {
             return value
@@ -344,11 +340,11 @@ public class Device: Flare, FlarePosition {
             return 0
         }
     }
-    
+
     public func distanceTo(thing: Thing) -> Double {
         return self.position - thing.position
     }
-    
+
     public func angleTo(thing: Thing) -> Double {
         let dx = thing.position.x - self.position.x
         let dy = thing.position.y - self.position.y
@@ -363,14 +359,14 @@ public class Geofence: NSObject {
     public var latitude: Double
     public var longitude: Double
     public var radius: Double
-    
+
     public init(json: JSONDictionary) {
         self.latitude = json.getDouble(key: "latitude")
         self.longitude = json.getDouble(key: "longitude")
         self.radius = json.getDouble(key: "radius")
     }
-    
-    public override var description: String {
+
+    override public var description: String {
         let latLabel = self.latitude >= 0 ? "°N" : "°S"
         let longLabel = self.latitude >= 0 ? "°E" : "°W"
         return "\(self.latitude)\(latLabel), \(self.longitude)\(longLabel), \(self.radius)m))"
@@ -382,16 +378,16 @@ public class Geofence: NSObject {
         let lon1rad = longitude * Double.pi/180
         let lat2rad = Double(latlong.x) * Double.pi/180
         let lon2rad = Double(latlong.y) * Double.pi/180
-        
+
         let dLat = lat2rad - lat1rad
         let dLon = lon2rad - lon1rad
         let a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1rad) * cos(lat2rad)
         let c = 2 * asin(sqrt(a))
-        let R = 6372.8
-        
-        return R * c
+        let r = 6372.8
+
+        return r * c
     }
-    
+
     public func toJSON() -> JSONDictionary {
         return ["latitude": self.latitude as AnyObject, "longitude": self.longitude as AnyObject, "radius": self.radius as AnyObject]
     }

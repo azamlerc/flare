@@ -90,6 +90,7 @@ public class BeaconManager: NSObject, CLLocationManagerDelegate {
         case .denied: NSLog("Denied")
         case .authorizedAlways: NSLog("Authorized Always")
         case .authorizedWhenInUse: NSLog("Authorized When In Use")
+        default: NSLog("Unknown")
         }
     }
 

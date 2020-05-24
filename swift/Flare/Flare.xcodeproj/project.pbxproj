@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4943CAF3247AE9FE00C8A0A0 /* ExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943CAF2247AE9FE00C8A0A0 /* ExtensionsTests.swift */; };
+		4943CAF5247AE9FE00C8A0A0 /* Flare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C97E31F01B7E18E300402556 /* Flare.framework */; };
+		4943CAFB247AEBAB00C8A0A0 /* SocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97550521B90937C003923B3 /* SocketIO.framework */; };
+		4943CAFC247AEBB000C8A0A0 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49730C0B24649B600053C8DD /* Starscream.framework */; };
+		4943CAFE247AECE000C8A0A0 /* SocketIO.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D97550521B90937C003923B3 /* SocketIO.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4943CAFF247AECE400C8A0A0 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49730C0B24649B600053C8DD /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49730C0A24649B490053C8DD /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49730C0924649B490053C8DD /* Starscream.framework */; };
 		49730C0C24649B600053C8DD /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49730C0B24649B600053C8DD /* Starscream.framework */; };
 		C961FE431C52CE810072B0DD /* LightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C961FE421C52CE810072B0DD /* LightManager.swift */; };
@@ -30,7 +36,34 @@
 		D97550531B90937C003923B3 /* SocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97550521B90937C003923B3 /* SocketIO.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4943CAF6247AE9FE00C8A0A0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C97E31C61B7E18BE00402556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C97E31EF1B7E18E300402556;
+			remoteInfo = "Flare-Mac";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4943CAFD247AECD600C8A0A0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4943CAFE247AECE000C8A0A0 /* SocketIO.framework in CopyFiles */,
+				4943CAFF247AECE400C8A0A0 /* Starscream.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		4943CAF0247AE9FE00C8A0A0 /* FlareTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlareTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4943CAF2247AE9FE00C8A0A0 /* ExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsTests.swift; sourceTree = "<group>"; };
+		4943CAF4247AE9FE00C8A0A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49730C0924649B490053C8DD /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		49730C0B24649B600053C8DD /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/Mac/Starscream.framework; sourceTree = "<group>"; };
 		C961FE421C52CE810072B0DD /* LightManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightManager.swift; sourceTree = "<group>"; };
@@ -52,6 +85,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4943CAED247AE9FE00C8A0A0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4943CAF5247AE9FE00C8A0A0 /* Flare.framework in Frameworks */,
+				4943CAFB247AEBAB00C8A0A0 /* SocketIO.framework in Frameworks */,
+				4943CAFC247AEBB000C8A0A0 /* Starscream.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C97E31CB1B7E18BE00402556 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -77,10 +120,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4943CAF1247AE9FE00C8A0A0 /* FlareTests */ = {
+			isa = PBXGroup;
+			children = (
+				4943CAF4247AE9FE00C8A0A0 /* Info.plist */,
+				4943CAF2247AE9FE00C8A0A0 /* ExtensionsTests.swift */,
+			);
+			path = FlareTests;
+			sourceTree = "<group>";
+		};
 		C97E31C51B7E18BE00402556 = {
 			isa = PBXGroup;
 			children = (
 				C97E31D11B7E18BE00402556 /* Flare */,
+				4943CAF1247AE9FE00C8A0A0 /* FlareTests */,
 				C97E32141B7E1B7700402556 /* Frameworks */,
 				C97E31D01B7E18BE00402556 /* Products */,
 			);
@@ -91,6 +144,7 @@
 			children = (
 				C97E31CF1B7E18BE00402556 /* Flare.framework */,
 				C97E31F01B7E18E300402556 /* Flare.framework */,
+				4943CAF0247AE9FE00C8A0A0 /* FlareTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,6 +209,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4943CAEF247AE9FE00C8A0A0 /* FlareTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4943CAFA247AE9FE00C8A0A0 /* Build configuration list for PBXNativeTarget "FlareTests" */;
+			buildPhases = (
+				4943CAEC247AE9FE00C8A0A0 /* Sources */,
+				4943CAED247AE9FE00C8A0A0 /* Frameworks */,
+				4943CAEE247AE9FE00C8A0A0 /* Resources */,
+				4943CAFD247AECD600C8A0A0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4943CAF7247AE9FE00C8A0A0 /* PBXTargetDependency */,
+			);
+			name = FlareTests;
+			productName = FlareTests;
+			productReference = 4943CAF0247AE9FE00C8A0A0 /* FlareTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C97E31CE1B7E18BE00402556 /* Flare-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C97E31E51B7E18BE00402556 /* Build configuration list for PBXNativeTarget "Flare-iOS" */;
@@ -200,10 +273,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0710;
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Andrew Zamler-Carhart";
 				TargetAttributes = {
+					4943CAEF247AE9FE00C8A0A0 = {
+						CreatedOnToolsVersion = 11.3.1;
+						ProvisioningStyle = Automatic;
+					};
 					C97E31CE1B7E18BE00402556 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 5NSX786795;
@@ -231,11 +308,19 @@
 			targets = (
 				C97E31CE1B7E18BE00402556 /* Flare-iOS */,
 				C97E31EF1B7E18E300402556 /* Flare-Mac */,
+				4943CAEF247AE9FE00C8A0A0 /* FlareTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4943CAEE247AE9FE00C8A0A0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C97E31CD1B7E18BE00402556 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -286,6 +371,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4943CAEC247AE9FE00C8A0A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4943CAF3247AE9FE00C8A0A0 /* ExtensionsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C97E31CA1B7E18BE00402556 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -313,7 +406,73 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4943CAF7247AE9FE00C8A0A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C97E31EF1B7E18E300402556 /* Flare-Mac */;
+			targetProxy = 4943CAF6247AE9FE00C8A0A0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		4943CAF8247AE9FE00C8A0A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = FlareTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.compass.FlareTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4943CAF9247AE9FE00C8A0A0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = FlareTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.compass.FlareTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		C97E31E31B7E18BE00402556 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -547,6 +706,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4943CAFA247AE9FE00C8A0A0 /* Build configuration list for PBXNativeTarget "FlareTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4943CAF8247AE9FE00C8A0A0 /* Debug */,
+				4943CAF9247AE9FE00C8A0A0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C97E31C91B7E18BE00402556 /* Build configuration list for PBXProject "Flare" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

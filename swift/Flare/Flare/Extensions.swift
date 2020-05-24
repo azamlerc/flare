@@ -12,7 +12,7 @@ import Foundation
 public typealias JSONDictionary = [String: Any]
 public typealias JSONArray = [JSONDictionary]
 
-public struct Point3D {
+public struct Point3D: Equatable {
     public static let zero = Point3D(x: CGFloat(0), y: CGFloat(0), z: CGFloat(0))
 
     public var x: CGFloat
@@ -32,7 +32,7 @@ public struct Point3D {
     }
 }
 
-public struct Size3D {
+public struct Size3D: Equatable {
     public var width: CGFloat
     public var height: CGFloat
     public var depth: CGFloat
@@ -44,7 +44,7 @@ public struct Size3D {
     }
 }
 
-public struct Cube3D {
+public struct Cube3D: Equatable {
     public var origin: Point3D
     public var size: Size3D
 
@@ -218,13 +218,13 @@ public extension Array {
 public extension Double {
 
     // returns the number rounded to the given precision
-    // for example, 17.37.roundTo(0.5) returns 17.5
+    // for example, 17.37.roundTo(precision: 0.5) returns 17.5
     func roundTo(precision: Double) -> Double {
         return (self + precision / 2.0).roundDown(precision: precision)
     }
 
     // returns the number rounded down to the given precision
-    // for example, 17.37.roundTo(0.5) returns 17.0
+    // for example, 17.37.roundDown(precision: 0.5) returns 17.0
     func roundDown(precision: Double) -> Double {
         return Double(Int(self / precision)) * precision
     }

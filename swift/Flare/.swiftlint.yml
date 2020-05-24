@@ -5,6 +5,8 @@ disabled_rules: # rule identifiers to exclude from running
   - file_length
   - line_length
   - force_cast
+  - overridden_super_call
+  - trailing_whitespace
   # - type_name
   # - xctfail_message
   # - redundant_string_enum_value
